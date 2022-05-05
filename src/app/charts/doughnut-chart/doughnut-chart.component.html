@@ -1,0 +1,16 @@
+<div id="chart" class="d-block mx-auto" >
+  <apx-chart *ngIf="this.stats.totalReplies>0; else noData"
+             [series]="chartOptions.series"
+             [chart]="chartOptions.chart"
+             [labels]="chartOptions.labels"
+             [legend]="chartOptions.legend"
+             [responsive]="chartOptions.responsive"
+             [dataLabels]="chartOptions.dataLabels"
+             [colors]="chartOptions.colors"></apx-chart>
+  <ng-template #noData>
+    <span class="text-center d-block">No Data</span>
+  </ng-template>
+</div>
+
+
+

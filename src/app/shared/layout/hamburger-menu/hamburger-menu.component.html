@@ -1,0 +1,15 @@
+
+  <div class="hamburger " toggleOpen (click)="toggleMenu($event)">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <ul id="menu" *ngIf="isOpen" class="p-0">
+    <li>
+      <button class="button p-2 w-100"
+              (click)="onLogOut()">
+        Log Out
+      </button>
+    </li>
+  </ul>

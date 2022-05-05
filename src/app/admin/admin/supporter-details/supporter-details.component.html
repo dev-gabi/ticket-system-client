@@ -1,0 +1,27 @@
+<div class="row p-0 m-0">
+  <div *ngIf="supporter; else error" class="c-component slide-in-from-left col-md-6 Ingredient">
+    <h2>{{supporter.name}}'s current month performance:</h2>
+    <app-bar-chart></app-bar-chart>
+
+    <div>
+      <h3 class="text-center">Supporter Details:</h3>
+      <p class="text-center">
+        Id: {{supporter.id}}<br />
+        Name: {{supporter.name}}<br />
+        Email: {{supporter.email}}<br />
+        Status: {{supporter.isActive? 'active': 'inactive'}}
+      </p>
+      <br />
+      <button (click)="onEdit()" class="button mx-auto rounded d-block">Edit Details</button>
+    </div>
+  </div>
+  <ng-template #error>
+    <div class="c-component slide-in-from-left col-md-12 Ingredient text-center">
+      An error has occured.
+    </div>
+  </ng-template>
+
+  <div class="col-md-6">
+    <router-outlet></router-outlet>
+  </div>
+</div>

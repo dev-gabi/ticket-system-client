@@ -1,0 +1,15 @@
+<div >
+  <apx-chart *ngIf="performance.employeeStats!=null;else noData"
+             [series]="chartOptions.series"
+             [chart]="chartOptions.chart"
+             [plotOptions]="chartOptions.plotOptions"
+             [labels]="chartOptions.labels"
+             [legend]="chartOptions.legend"
+             [responsive]="chartOptions.responsive"
+             [colors]="chartOptions.colors"></apx-chart>
+  <ng-template #noData>
+    <span class="text-center d-block">No Data</span>
+  </ng-template>
+</div>
+
+

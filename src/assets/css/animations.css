@@ -1,0 +1,90 @@
+@keyframes slide-in-from-left {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(0%);
+  }
+}
+@keyframes top-nav-btn-hover {
+  0% {
+    background-color: black;
+    color: white;
+  }
+
+  100% {
+    background-color: #151515;
+    color: grey;
+  }
+}
+
+@keyframes expand-input {
+  from {
+    padding: 3px;
+  }
+
+  to {
+    padding: 6px;
+  }
+}
+
+@keyframes btn-hover {
+  from {
+    background: cornflowerblue;
+    color: black;
+  }
+
+  to {
+    background: black;
+    color: cornflowerblue;
+  }
+}
+@keyframes btn-sec-hover {
+  from {
+    background: #6c757d;
+  }
+
+  to {
+    background: cornflowerblue;
+  }
+}
+@keyframes fade-in {
+  0% {
+    opacity:0;
+  }
+
+  100% {
+    opacity:1;
+  }
+}
+.fade-in {
+  animation: fade-in 2s forwards;
+}
+@keyframes space-letters{
+  from {
+    letter-spacing: initial;
+    font-weight:normal;
+  }
+  to {
+    letter-spacing: 2px;
+    font-weight: bold;
+  }
+
+}
+@keyframes unspace-letters {
+  from {
+    letter-spacing: 2px;
+    font-weight: bold;
+  }
+
+  to {
+    letter-spacing: initial;
+    font-weight: normal;
+  }
+}
+@media (min-width: 576px) {
+  .slide-in-from-left {
+    animation: slide-in-from-left 2s forwards;
+  }
+} 

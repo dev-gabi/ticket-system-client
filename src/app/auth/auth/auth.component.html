@@ -1,0 +1,65 @@
+<app-seed-tickets></app-seed-tickets>
+<div class="d-block mx-auto box mt-5 rounded bg-light border border-dark b-shadow">
+
+  <div *ngIf="!isForgotPassword">
+    <h1 class="text-center">Login</h1>
+
+    <form #f="ngForm" (ngSubmit)="onLogin(f.value)" class="m-5 text-large text-center col-md-10 row">
+      <div class="col-md-12 row mb-2">
+        <div class="col-md-4">
+          <app-td-form-label-validation [inputName]="email"></app-td-form-label-validation>
+          <label>Email:</label>
+        </div>
+
+        <div class="col-md-8">
+          <input type="text" ngModel name="email" #email="ngModel" required email class="mx-auto d-block box-field" />
+          <span *ngIf="!email.valid && email.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="email.errors.required">Please fill in your email</span>
+            <span *ngIf="email.errors.email">Please enter a valid email</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="col-md-12 row mb-2">
+        <div class="col-md-4">
+          <app-td-form-label-validation [inputName]="password"></app-td-form-label-validation>
+          <label>Password:</label>
+        </div>
+
+        <div class="col-md-8">
+          <input type="password" ngModel name="password" #password="ngModel" required minlength="6" class="mx-auto d-block box-field" />
+          <span *ngIf="!password.valid && password.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="password.errors.required">Please fill in your password</span>
+            <span *ngIf="password.value.length>0  && password.value.length<6">Password should be at least 6 characters</span>
+          </span>
+        </div>
+      </div><br />
+      <div class="col-md-12 row">
+        <div class="col-md-4">&nbsp;</div>
+        <div class="col-md-8">
+          <button type="submit" class="button d-block mx-auto w-75" [disabled]="!f.valid" [allowSubmit]="f.valid">Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <app-forgot-password *ngIf="isForgotPassword"></app-forgot-password>
+
+  <div class="row">
+
+    <div class="col-md-4 text-center">
+      <span class="btn " (click)="isForgotPassword = !isForgotPassword">{{isForgotPassword==false ? 'Forgot Password?' : 'Back to log in'}}</span>
+    </div>
+    <div class="col-md-4">
+      <div *ngIf="!isForgotPassword;else blankSpace"  class="text-end">
+        Don't have an account?<br />
+        <a routerLink="/auth/register">Click here to register</a>
+      </div>
+      <ng-template #blankSpace>    <span class="col-md-4">  &nbsp;</span></ng-template>
+    </div>
+  </div>
+
+</div>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<app-registered-users></app-registered-users>
+<app-alert *ngIf="errorMessage!=null" [message]="errorMessage" (close)="onHandleError()"></app-alert>
+

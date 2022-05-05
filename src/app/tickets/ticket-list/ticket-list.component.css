@@ -1,0 +1,13 @@
+.active{
+    font-weight:bolder;
+    font-size:large;
+}
+a{
+    text-decoration:none;
+    color:black;
+}
+@media ( max-width: 600px) {
+  .card-body {
+    padding: 0;
+  }
+}

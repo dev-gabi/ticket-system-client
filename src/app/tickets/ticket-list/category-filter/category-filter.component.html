@@ -1,0 +1,14 @@
+<div class=" col-md-6 d-block mx-auto text-large">
+  <h3>Category Filter</h3>
+  <label></label>
+  <span tabindex="0"
+        (focus)="hideCategories = false"
+        class="input w-100 btn text-large"
+        #input
+        id="categorySelect">{{selectedCategory}}</span>
+
+  <ul *ngIf="!hideCategories" class="search-ul w-100" id="categories">
+    <li *ngFor="let cat of categories" (click)="onSelectCategory(cat)" class="pointer">{{cat}}</li>
+  </ul>
+
+</div>

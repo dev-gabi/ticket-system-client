@@ -1,0 +1,13 @@
+<div *ngIf="!isError;else error">
+  <h3 class="text-center mt-4">You have succesfully registered</h3>
+  <p class="text-center text-large"><a routerLink="/auth/login">click here</a> to log in.</p>
+</div>
+<ng-template #error>
+  <h3 class="text-center mt-4">Registration Failed!</h3>
+  <p class="text-center mt-4 h3">
+    An error has occured while trying to confirm your email.<br/>
+    {{errorMessage}}
+  </p>
+  <p class="text-center text-large"><button (click)="resendConfirmationEmail()" class="button d-block mx-auto">click here </button>to get a new confirmation link to your email.</p>
+</ng-template>
+

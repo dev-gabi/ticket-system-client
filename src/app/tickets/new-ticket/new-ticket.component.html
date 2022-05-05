@@ -1,0 +1,66 @@
+<div class="c-component text-center fade-in mt-4">
+  <h2>New Support Ticket</h2>
+  <form #newTicketForm="ngForm" (ngSubmit)="onSubmit(newTicketForm)">
+    <div class="row">
+      <div class="col-md-3">
+        <app-td-form-label-validation [inputName]="title"></app-td-form-label-validation>
+        <label>Title</label>
+      </div>
+      <div class="col-md-5">
+        <input type="text" ngModel #title="ngModel" name="title" required minlength="4" maxlength="30" class="border w-100" /><br />
+        <span *ngIf="title.invalid && title.touched" class="danger w-100 d-block">
+          <span *ngIf="title.errors.required"> Please fill in the title</span>
+          <span *ngIf="title.value.length<4"> The title should be at least 4 charectars</span>
+        </span>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3">
+        <app-td-form-label-validation [inputName]="initialReply"></app-td-form-label-validation>
+        <label>Message</label>
+      </div>
+      <div class="col-md-5">
+        <textarea type="text"
+                  ngModel
+                  #initialReply="ngModel"
+                  name="initialReply"
+                  required
+                  minlength="5"
+                  rows="10"
+                  class="rounded w-100"></textarea><br />
+        <span *ngIf="initialReply.invalid && initialReply.touched" class="danger w-100 d-block">
+          <span *ngIf="
+        initialReply.errors.required">
+            Please fill in your message
+          </span><br />
+          <span *ngIf="initialReply.value.length<5">Message should contain at least 5 charectars</span>
+        </span>
+      </div>
+      <div class="col-md-2">
+        <app-image-preview (file)="setFile($event)"></app-image-preview>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3">
+        <app-td-form-label-validation [inputName]="category"></app-td-form-label-validation>
+        <label>Category</label>
+      </div>
+      <div class="col-md-5">
+        <select ngModel #category="ngModel" name="category" required class="border w-100">      
+          <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
+        </select>
+        <span *ngIf="category.invalid && category.touched" class="danger  w-100 d-block">
+          <span *ngIf="category.errors.required"> Please select a category</span>
+        </span>
+      </div>
+    </div><br/>
+    <button type="submit" [disabled]="newTicketForm.invalid" class="button d-inline-block mr-2" [allowSubmit]="newTicketForm.valid"> Submit </button>
+    <a routerLink="/panel/tickets"
+       class="button d-inline-block bg-secondary">Cancel</a>
+    <br />
+  </form>
+
+</div>
+<app-alert *ngIf="errorMessage != null" [message]="errorMessage" (close)="this.errorMessage = null"></app-alert>

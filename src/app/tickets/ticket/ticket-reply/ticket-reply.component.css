@@ -1,0 +1,9 @@
+.inner-reply {
+  background-color: #eae5e5;
+}
+
+@media (max-width:576px){
+  .w-95-percent {
+    width: 95%;
+  }
+}

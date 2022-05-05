@@ -1,0 +1,17 @@
+<div *ngIf="!hide" class="row" [ngClass]="{'inner-reply' : ticketReply.isInnerReply}">
+  <div class="col-md-4">
+    <span class="text-center d-inline-block p-0 m-0 border-bottom"> <b>{{ticketReply.userName}}</b><br/>{{ticketReply.date | date :'dd/MM/yyyy-HH:mm'}}</span>
+    <br/>
+    <span *ngIf="ticketReply.isInnerReply" class="text-danger"><b>Inner Documentation</b></span>
+  </div>
+  <p class="border-bottom col-md-6 p-1 m-0 break w-95-percent">
+    {{ticketReply.message}}
+  </p>
+  <div *ngIf="ticketReply.isImageAttached && ticketReply.image!=null" class="col-md-2">
+    <h6>Attached Image</h6>
+    <div>
+      <a href="{{ticketReply.image.path}}"><img src="{{ticketReply.image.path}}" alt="image" width="100" height="100" /></a>
+    </div>
+  </div>
+
+</div>

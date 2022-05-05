@@ -1,0 +1,51 @@
+<div class="c-component text-center fade-in " *ngIf="ticket">
+  <div>
+      <span [statusColor]="ticket.status" class="text-start float-left">
+        ticket status: {{ticket.status}} <span *ngIf="ticket.status===closed">at {{ticket.closingDate  |date :'dd/MM/yyyy-HH:mm'}}</span>
+      </span><br />
+      <button *ngIf="ticket.status===open"
+              (click)="onCloseTicket()"
+              class="button-secondary bg-danger float-left">
+        Close ticket
+      </button>
+</div>
+
+  <h2>ticket#: {{ticket.id}} {{ticket.title}}</h2>
+
+  <br />
+  <app-ticket-reply *ngFor="let reply of ticket.replies" [ticketReply]="reply" [isCustomer]="isCustomer"></app-ticket-reply>
+
+  <div >
+    <form #addReplyForm="ngForm" (ngSubmit)="onAddReply(addReplyForm.value)" class="row" *ngIf="ticket.status===open">
+      <div class="col-md-3"> &nbsp;</div>
+      <div class="col-md-5">
+        <h5>Add a reply</h5>
+        <textarea type="text" name="reply" ngModel #reply="ngModel" rows="10" class="w-100" required></textarea><br />
+        <span *ngIf="reply.invalid && reply.touched" class="danger w-100 d-inline-block">
+          <span *ngIf="reply.errors.required ">Please fill in your message</span>
+        </span>
+
+        <span *ngIf="!isCustomer">
+          Set as Inner documentation: <input type="checkbox" name="innerReplyChecked" ngModel/>
+        </span>
+        
+      </div>
+      <div class="col-md-2">
+        <app-image-preview (file)="setFile($event)"></app-image-preview>
+      </div>
+      <div class="col-12">
+        <br />
+        <button type="submit"
+                class="button d-inline-block mr-2" [disabled]="addReplyForm.invalid" [allowSubmit]="addReplyForm.valid">
+          Add a reply
+        </button>
+        <a routerLink="/customers/tickets"
+           class="button d-inline-block bg-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<app-confirm *ngIf="confirmCloseTicket" [question]="confirmQuestion" (confirm)="onConfirm()" (close)="onCloseConfirm()"></app-confirm>
+<app-alert *ngIf="responseMessage!=null" [message]="responseMessage" (close)="onCloseAlert()"></app-alert>

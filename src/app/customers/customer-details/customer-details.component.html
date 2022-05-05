@@ -1,0 +1,14 @@
+<div class="c-component slide-in-from-left col-md-12 text-large">
+  <div>
+    <h2 class="text-center">Personal Details:</h2>
+    <p class="text-center">
+      Name: {{customer.name}}<br />
+      Phone number: {{customer.phoneNumber}}<br />
+      Adress: {{customer.address}}<br />
+      Registration Date: {{customer.registrationDate | date:'dd/MM/yyyy' }}<br />
+    </p>
+    <br />
+    <button (click)="onEdit()" class="button mx-auto rounded d-block">Edit Details</button>
+  </div>
+</div>
+

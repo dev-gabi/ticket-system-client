@@ -1,0 +1,46 @@
+<h2 class="text-center">Admin Dashboard</h2>
+<div class="row p-0 m-0 container-fluid">
+  <div class="col-md-12 row">
+    <div class="col-md-12"><h3 class="text-center">This month statistics</h3><hr></div>
+
+      <div class="col-md-4">
+        <h3 class="text-center">Top supporters performance<br/>(Number of closed tickets)</h3>
+        <app-radial-bar-chart *ngIf="topPerformance!=null" [performance]="topPerformance"></app-radial-bar-chart>
+      </div>
+
+      <div class="col-md-4">
+        <h3 class="text-center">
+          Replies VS Tickets closed
+        </h3>
+        <app-doughnut-chart *ngIf="generalStats!=null" [stats]=generalStats></app-doughnut-chart>
+      </div>
+
+      <div class="col-md-4">
+        <h3 class="text-center">
+          Opened / Closed tickets ratio
+        </h3>
+        <app-gradient-chart *ngIf="generalStats!=null" [opened]="generalStats.openedTickets" [closed]="generalStats.closedTicketsThatWereOpenThisMonth"></app-gradient-chart>
+      </div>
+    </div>
+    <div class="col-md-12 container-fluid">
+
+      <h3 class="text-center">Manage supporters</h3>
+      <hr />
+      <nav class="col-md-12 row">
+
+        <a routerLink="/admin/refresh-token" class="button col w-25 mr-2">Refresh registration token</a>
+        <a routerLink="/admin/register" class="button col w-25 mr-2">Register a new employee</a>
+        <a routerLink="/admin/supporters/search" class="button col w-25 ">Search supporter data</a>
+      </nav>
+
+
+
+      <div class="col-md-12">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+
+
+
+  </div>
+<app-alert *ngIf="error!=null" [message]="error" (close)="error = null"></app-alert>

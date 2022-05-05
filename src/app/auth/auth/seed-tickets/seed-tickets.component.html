@@ -1,0 +1,8 @@
+<div class="d-block mx-auto box mt-5 rounded bg-danger border border-dark b-shadow m-5 text-large text-center">
+  Before you log in, please click this button to <br/>
+  <button class="button d-block mx-auto w-200" (click)="onSeed()">Seed Dummy Data</button>
+</div>
+
+
+<app-alert *ngIf="message!=null" [message]="message" (close)="message=null"></app-alert>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

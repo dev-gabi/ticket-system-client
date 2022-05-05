@@ -1,0 +1,8 @@
+<div class="alert-container" (click)="onCloseBox()"></div>
+<div class="alert-box"  [@alert-box]>
+  <p class="text-center text-large">{{ message }}</p>
+  <br/>
+  <div class="alert-box-actions">
+    <button class="button col-md-3 d-block mx-auto" (click)="onCloseBox()">Close</button>
+  </div>
+</div>

@@ -1,0 +1,222 @@
+
+<div *ngIf="!checkEmail;else emailSent" class="d-block mx-auto box  mt-5 rounded bg-light border border-dark b-shadow">
+
+  <div [ngSwitch]="formType">
+    <form *ngSwitchCase="customerFormType" #registerForm="ngForm" (ngSubmit)="onCustomerRegister(registerForm.value)" class="m-5 text-center col-md-10">
+      <h1 class="text-center">Register</h1>
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="uName"></app-td-form-label-validation>
+          <label>User name:</label>
+        </div>
+        <div class="col-md-7 d-block">
+          <input type="text" ngModel name="userName" #uName="ngModel" required minlength="2" class="mx-auto d-block box-field" />
+          <span *ngIf="!uName.valid && uName.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="uName.value.length<2">User name must be at least 2 characthers</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="email"></app-td-form-label-validation>
+          <label>Email:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="text" ngModel name="email" #email="ngModel" required email class="mx-auto d-block box-field" />
+          <span *ngIf="!email.valid && email.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="email.errors.required">Email is requierd</span>
+            <span *ngIf="email.errors.email">Email is not valid</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="password"></app-td-form-label-validation>
+          <label>Password:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="password" ngModel name="password" #password="ngModel" required minlength="6" maxlength="30" pattern="^(?=.*[0-9])(?=.*[a-z]).{6,30}$" class="mx-auto d-block box-field" />
+          <span *ngIf="!password.valid && password.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="password.value.length<6">Password must be at least 6 characthers</span>
+            <span *ngIf="password.value.length>30">Password must mot exceed 30 characthers</span>
+            <span *ngIf="password.errors.pattern">Password must contain at least one digit and one letter</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="confirmPassword"></app-td-form-label-validation>
+          <label>Confirm Password:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="password" ngModel name="confirmPassword" #confirmPassword="ngModel" required minlength="6" maxlength="30" pattern="^(?=.*[0-9])(?=.*[a-z]).{6,30}$" class="mx-auto d-block box-field" />
+          <span *ngIf="!confirmPassword.valid && confirmPassword.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="confirmPassword.value.length<6">Password must be at least 6 characthers</span>
+            <span *ngIf="confirmPassword.value.length>30">Password must mot exceed 30 characthers</span>
+            <span *ngIf="confirmPassword.errors.pattern">Password must contain at least one digit and one letter</span>
+          </span>
+          <span *ngIf="confirmPassword.touched && confirmPassword.value!==password.value" class="danger mx-auto d-block box-field">Passwords must match!</span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="phoneNumber"></app-td-form-label-validation>
+          <label>Phone number:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="text" ngModel name="phoneNumber" #phoneNumber="ngModel" required pattern="^\d{10}$" class="mx-auto d-block box-field" />
+          <span *ngIf="!phoneNumber.valid && phoneNumber.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="phoneNumber.errors.required">please fill in your number</span>
+            <span *ngIf="phoneNumber.errors.pattern">please fill in 10 digits</span>
+          </span>
+        </div>
+      </div><br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="address"></app-td-form-label-validation>
+          <label>Address:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="text" ngModel name="address" #address="ngModel" required minlength="5" class="mx-auto d-block box-field" />
+          <span *ngIf="!address.valid && address.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="address.errors.required">please fill in your address</span>
+            <span *ngIf="address.errors.minlength">please fill at least 5 characters</span>
+          </span>
+        </div>
+      </div><br />
+      <button type="submit" class="button d-block mx-auto" [disabled]="!registerForm.valid || confirmPassword.value!==password.value" [allowSubmit]="registerForm.valid && confirmPassword.value===password.value">Register</button>
+      <div>
+        <a routerLink="/auth/login" class="btn">Back to login</a>
+      </div>
+    </form>
+
+    <form *ngSwitchCase="employeePreRegisterFormType" #registerForm="ngForm" (ngSubmit)="onEmployeePreRegister(registerForm.value)" class="m-5 text-center col-md-10">
+      <h3 class="text-center">Pre Register an employee</h3>
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="uName"></app-td-form-label-validation>
+          <label>User name:</label>
+        </div>
+        <div class="col-md-7 d-block">
+          <input type="text" ngModel name="userName" #uName="ngModel" required minlength="2" class="mx-auto d-block box-field" />
+          <span *ngIf="!uName.valid && uName.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="uName.errors.required">User name is required</span>
+            <span *ngIf="uName.value.length<2">User name must be at least 2 characthers</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="personalEmail"></app-td-form-label-validation>
+          <label>Personal email:</label>
+        </div>
+        <div class="col-md-7 d-block">
+          <input type="email" ngModel name="personalEmail" #personalEmail="ngModel" required email minlength="2" class="mx-auto d-block box-field input" />
+          <span *ngIf="!personalEmail.valid && personalEmail.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="personalEmail.errors.required">Email is requierd</span>
+            <span *ngIf="personalEmail.errors.email">Email is not valid</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="role"></app-td-form-label-validation>
+          <label>Role:</label>
+        </div>
+        <div class="col-md-7 d-block">
+          <select ngModel name="role" #role="ngModel" required class="mx-auto d-block box-field">
+            <option *ngFor="let role of employeeRoles" [ngValue]="role">{{role}}</option>
+          </select>
+          <span *ngIf="!role.valid && role.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="role.errors.required">Role is requierd</span>
+          </span>
+        </div>
+      </div>   <br />
+      *The Token will be valid for 1 hour.<br/>
+      <button type="submit" class="button d-block mx-auto" [disabled]="!registerForm.valid" [allowSubmit]="registerForm.valid">Register</button>
+    </form>
+
+    <form *ngSwitchCase="employeeRegisterFormType" #registerForm="ngForm" (ngSubmit)="onEmployeeRegister(registerForm.value)" class="m-5 text-center col-md-10">
+      <h1 class="text-center">Hi, {{employeePreRegisterUserName}}</h1>
+      <h3 class="text-center">Please enter your details</h3>
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <label>Email:</label>
+        </div>
+        <div class="col-md-7">
+          {{employeePreRegisterCorporateEmail}}
+        </div>
+      </div><br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="password"></app-td-form-label-validation>
+          <label>Password:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="password" ngModel name="password" #password="ngModel" required minlength="6" maxlength="30" pattern="^(?=.*[0-9])(?=.*[a-z]).{6,30}$" class="mx-auto d-block box-field" />
+          <span *ngIf="!password.valid && password.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="password.value.length<6">Password must be at least 6 characthers</span>
+            <span *ngIf="password.value.length>30">Password must mot exceed 30 characthers</span>
+            <span *ngIf="password.errors.pattern">Password must contain at least one digit and one letter</span>
+          </span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="confirmPassword"></app-td-form-label-validation>
+          <label>Confirm Password:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="password" ngModel name="confirmPassword" #confirmPassword="ngModel" required minlength="6" maxlength="30" pattern="^(?=.*[0-9])(?=.*[a-z]).{6,30}$" class="mx-auto d-block box-field" />
+          <span *ngIf="!confirmPassword.valid && confirmPassword.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="confirmPassword.value.length<6">Password must be at least 6 characthers</span>
+            <span *ngIf="confirmPassword.value.length>30">Password must mot exceed 30 characthers</span>
+            <span *ngIf="confirmPassword.errors.pattern">Password must contain at least one digit and one letter</span>
+          </span>
+          <span *ngIf="confirmPassword.touched && confirmPassword.value!==password.value" class="danger mx-auto d-block box-field">Passwords must match!</span>
+        </div>
+      </div>
+      <br />
+      <div class="row col-md-10">
+        <div class="col-md-5">
+          <app-td-form-label-validation [inputName]="phoneNumber"></app-td-form-label-validation>
+          <label>Phone number:</label>
+        </div>
+        <div class="col-md-7">
+          <input type="text" ngModel name="phoneNumber" #phoneNumber="ngModel" pattern="^\d{10}$" class="mx-auto d-block box-field" />
+          <span *ngIf="!phoneNumber.valid && phoneNumber.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="phoneNumber.errors.pattern">please fill in 10 digits</span>
+          </span>
+        </div>
+      </div><br />
+      <button type="submit" class="button d-block mx-auto" [disabled]="!registerForm.valid" [allowSubmit]="registerForm.valid">Register</button>
+    </form>
+
+
+  </div>
+  <div *ngIf="message!=null" class="m-5 Ingredient text-center col-md-10">
+    <p>{{message}}</p>
+  </div>
+</div>
+
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+  <ng-template #emailSent>
+    <div *ngIf="formType != employeeRegisterFormType">
+      <h1 class="text-center mt-4">
+        Please check your email to confirm your registration.
+      </h1>
+      <h3 class="text-center mt-4">If you did not recive an email with in a few minutes you can <button (click)="onSendConfirmationEmail()" class="button mx-auto">click here</button> to send a new one.</h3>
+    </div>
+    <div *ngIf="formType === employeeRegisterFormType">
+      <h1 class="text-center mt-4">You have successfully registered!</h1>
+      <h3 class="text-center mt-4">An email has been sent to your personal address.</h3>
+    </div>
+  </ng-template>

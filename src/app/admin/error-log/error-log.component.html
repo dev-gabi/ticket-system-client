@@ -1,0 +1,27 @@
+<h1 class="text-center m-3">Error Log</h1>
+<div class="container-fluid fade-in c-component d-block mx-auto">
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+
+      <div class="col-md-12 row">
+        <div class="col-md-4"><b>Date</b></div>
+        <div class="col-md-4"><b>User Name</b></div>
+        <div class="col-md-4"><b>Error Details</b></div>
+      </div>
+      <ng-template #loading>
+        <app-loading-spinner></app-loading-spinner>
+      </ng-template>
+      <div class="card-body col-md-12" *ngIf="errors; else loading;">
+        <div *ngFor="let error of errorsPage" class="border-bottom row">
+
+          <div class="col-md-4">{{error.date | date:'dd/MM/yyyy-HH:mm'}}</div>
+          <div class="col-md-4">{{error.userName}} </div>
+          <div class="col-md-4"> {{error.errorDetails}}</div>
+        </div>
+        <div class="card-footer pb-0 pt-3">
+          <jw-pagination [items]=" errors" (changePage)="onChangePage($event)" [pageSize]="10"></jw-pagination>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

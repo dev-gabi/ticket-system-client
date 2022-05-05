@@ -1,0 +1,25 @@
+.danger {
+  background-color: #ed4040;
+  border-width: 0px 2px 2px 2px;
+  border-color:black;
+  border-style:solid;
+}
+
+.invalid-circle {
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+}
+
+.success {
+  background-color: #34e084;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}

@@ -1,0 +1,99 @@
+
+<div [ngSwitch]="role">
+  <div *ngIf="isAuthenticated; else guest">
+
+    <nav class="text-center top-nav" *ngSwitchCase="customer">
+      <a routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}"
+         routerLink="/" class="align-middle text-center">
+        Home
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/how" class="align-middle text-center">
+        How To Use
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/customers" class="align-middle text-center">
+        Dashboard
+      </a>
+    </nav>
+
+    <nav class="text-center top-nav" *ngSwitchCase="supporter">
+      <a routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}"
+         routerLink="/" class="align-middle text-center">
+        Home
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/how" class="align-middle text-center">
+        How To Use
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/support/tickets" class="align-middle text-center">
+        Tickets
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/support/stats" class="align-middle text-center">
+        Stats
+      </a>
+    </nav>
+
+
+    <nav class="text-center top-nav" *ngSwitchCase="admin">
+      <a routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}"
+         routerLink="/" class="align-middle text-center">
+        Home
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/how" class="align-middle text-center">
+        How To Use
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/support" class="align-middle text-center">
+        Tickets
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/admin" class="align-middle text-center">
+        Dashboard
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/errors" class="align-middle text-center">
+        Dev Errors
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/auth-log" class="align-middle text-center">
+        Auth-log
+      </a>
+    </nav>
+
+    <div  id="hamburger-container" class="h6 row position-absolute">
+      <div class="col-2">
+        <app-hamburger-menu (logOut)="onLogout()"></app-hamburger-menu>
+      </div>
+
+      <div id="user-name" class="col-8 text-start" >
+        Hello {{userName}}
+      </div>
+    </div>
+  </div>
+
+  <ng-template #guest>
+    <nav class="text-center top-nav">
+      <a routerLinkActive="active"
+         [routerLinkActiveOptions]="{exact: true}"
+         routerLink="/" class="align-middle text-center">
+        Home
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/how" class="align-middle text-center">
+        How To Use
+      </a>
+      <a routerLinkActive="active"
+         routerLink="/auth/login" class="align-middle text-center">
+        Login
+      </a>
+
+    </nav>
+  </ng-template>
+</div>

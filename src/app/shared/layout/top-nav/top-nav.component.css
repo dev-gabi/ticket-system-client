@@ -1,0 +1,48 @@
+.top-nav {
+  height: 50px;
+  font-size: x-large;
+  background-color: black;
+  z-index: 2;
+
+}
+a, span {
+  padding: 5px;
+  margin: 5px;
+}
+a {
+  border: 1px solid black;
+  text-decoration: none;
+  color: white;
+}
+  a:hover {
+    animation: top-nav-btn-hover 1s forwards;
+  }
+.float-right{float:right;}
+.float-left {
+  float: left;
+}
+
+.active{
+    border-bottom:2px solid white;
+    font-weight:bold;
+}
+#hamburger-container {
+  width: 250px;
+  top:0;
+  color:white;
+  z-index:2;
+}
+
+@media only screen and (max-width: 600px) {
+  .top-nav{
+      height:auto;
+  }
+  a, span{padding:0;}
+  #hamburger-container {
+    top: initial;
+    width: 200px;
+  }
+  #user-name {
+      color:black;
+  }
+}

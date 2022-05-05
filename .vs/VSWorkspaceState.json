@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\admin",
+    "\\src\\app\\admin\\admin",
+    "\\src\\app\\admin\\auth-log",
+    "\\src\\app\\auth\\auth",
+    "\\src\\app\\auth\\auth\\register",
+    "\\src\\app\\shared",
+    "\\src\\app\\shared\\search"
+  ],
+  "SelectedNode": "\\src\\app\\shared\\search\\search.component.html",
+  "PreviewInSolutionExplorer": false
+}
