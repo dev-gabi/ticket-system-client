@@ -3,14 +3,9 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\admin",
-    "\\src\\app\\admin\\admin",
-    "\\src\\app\\admin\\auth-log",
-    "\\src\\app\\auth\\auth",
-    "\\src\\app\\auth\\auth\\register",
-    "\\src\\app\\shared",
-    "\\src\\app\\shared\\search"
+    "\\src\\app\\customers",
+    "\\src\\app\\customers\\customer-panel"
   ],
-  "SelectedNode": "\\src\\app\\shared\\search\\search.component.html",
+  "SelectedNode": "\\src\\app\\customers\\customer-panel\\customer-panel.component.html",
   "PreviewInSolutionExplorer": false
 }
