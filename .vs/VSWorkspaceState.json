@@ -3,9 +3,11 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\customers",
+    "\\src\\app\\auth",
+    "\\src\\app\\auth\\auth",
+    "\\src\\app\\auth\\auth\\register",
     "\\src\\app\\customers\\customer-panel"
   ],
-  "SelectedNode": "\\src\\app\\customers\\customer-panel\\customer-panel.component.html",
+  "SelectedNode": "\\src\\app\\auth\\auth\\register\\register.component.ts",
   "PreviewInSolutionExplorer": false
 }

@@ -73,6 +73,7 @@ export class RegisterComponent implements OnInit, OnDestroy
       error =>
       {
         this.form.reset();
+        this.isLoading = false;
         this.message = error;
       }
     );
@@ -91,6 +92,7 @@ export class RegisterComponent implements OnInit, OnDestroy
       error =>
       {
         this.form.reset();
+        this.isLoading = false;
         this.message = error;
       }
     );
@@ -115,6 +117,7 @@ export class RegisterComponent implements OnInit, OnDestroy
       error =>
       {
         this.form.reset();
+        this.isLoading = false;
         this.message = error;
       }
     );
