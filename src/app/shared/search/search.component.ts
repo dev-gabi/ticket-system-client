@@ -94,8 +94,9 @@ export class SearchComponent implements AfterViewInit, OnInit
   onSelectUser(id: string)
   {
     this.isLoading = true;
-    if (this.roleTypeSearch == environment.roles.customer) {
+    if (this.roleTypeSearch == environment.roles.customer) {     
       this.ticketService.getTicketsByUserId(id);
+      this.isLoading = false;
     } else if (this.roleTypeSearch == environment.roles.supporter) {
       this.selectedUserSub = this.employeeService.getEmployeeById(id).subscribe(
         supporter =>

@@ -3,11 +3,9 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\auth",
-    "\\src\\app\\auth\\auth",
-    "\\src\\app\\auth\\auth\\register",
-    "\\src\\app\\customers\\customer-panel"
+    "\\src\\app\\shared",
+    "\\src\\app\\shared\\search"
   ],
-  "SelectedNode": "\\src\\app\\auth\\auth\\register\\register.component.ts",
+  "SelectedNode": "\\src\\app\\shared\\search\\search.component.ts",
   "PreviewInSolutionExplorer": false
 }
