@@ -1,0 +1,33 @@
+<div class=" col-md-6 d-block mx-auto">
+  <h3>Search By</h3>
+  <div *ngIf="!isCustomer;else customer">
+
+    <div *ngIf="!isAdminDash;else adminDash">
+
+      <label>Content</label>
+      <input type="radio" name="searchType" value={{contentSearchType}} [checked]="true" (change)="onSearchTypeChange($event)" />
+
+      <label>User</label>
+      <input type="radio" name="searchType" value={{userSearchType}} (change)="onSearchTypeChange($event)" />
+
+    </div>
+    <ng-template #adminDash>
+      <div>
+        <label>User</label>
+        <input type="radio" name="searchType" value={{userSearchType}} [checked]="true" (change)="onSearchTypeChange($event)" />
+      </div>
+    </ng-template>
+  </div>
+
+
+  <ng-template #customer>
+    <label>Content</label>
+    <input type="radio" name="searchType" value={{contentSearchType}} [checked]="true" (change)="onSearchTypeChange($event)" disabled />
+  </ng-template>
+
+</div>
+<app-search-user *ngIf="isUserSearch; else contentSearch" [roleSearch]="roleTypeSearch"></app-search-user>
+
+<ng-template #contentSearch>
+  <app-search-content [isCustomer]="isCustomer"></app-search-content>
+</ng-template>

@@ -5,19 +5,18 @@ import { CanDeactivateGuard } from '../auth/guards/can-deactivate.guard';
 import { NewTicketComponent } from '../tickets/new-ticket/new-ticket.component';
 import { TicketListComponent } from '../tickets/ticket-list/ticket-list.component';
 import { TicketComponent } from '../tickets/ticket/ticket.component';
-import { TicketResolver } from '../tickets/tickets.resolver';
 import { CustomerDetailsEditComponent } from './customer-details/customer-details-edit/customer-details-edit.component';
 import { CustomerPanelComponent } from './customer-panel/customer-panel.component';
 
 const routes: Routes = [
   {
-    path: '', component: CustomerPanelComponent, canActivate: [AuthGuard],
+    path: '', component: CustomerPanelComponent, canActivate: [AuthGuard],  
     children: [
       { path: 'edit', component: CustomerDetailsEditComponent, canDeactivate: [CanDeactivateGuard] },
       {
-        path: 'tickets', component: TicketListComponent, resolve: { tickets: TicketResolver}, children: [
+        path: 'tickets', component: TicketListComponent, children: [
             { path: 'new', component: NewTicketComponent, pathMatch: 'full' },
-            { path: ':id', component: TicketComponent }
+          { path: ':id', component: TicketComponent}
           ]
         },
 

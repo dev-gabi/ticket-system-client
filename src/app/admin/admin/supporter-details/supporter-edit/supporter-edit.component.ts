@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, UrlTree } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CanComponentDeactivate } from '../../../../auth/guards/can-deactivate.guard';
 import { EmployeeService } from '../../../../employee.service';
 import { Supporter } from '../../../../support/models/supporter.model';
@@ -18,25 +19,22 @@ export class SupporterEditComponent implements OnInit, OnDestroy, CanComponentDe
 
   id: string;
   supporter: Supporter;
-  supporterSub: Subscription;
   editForm: FormGroup;
+  destroy$: Subject<boolean> = new Subject<boolean>();
   isConfirmBoxOpen = false;
   allowNavigateAway = false;
   changesSaved = false;
   confirmQuesion = "Cancel changes for this user?";
   error: string;
-  errorSub: Subscription;
 
   ngOnInit(): void
   {
-
-    this.supporterSub = this.employeeService.supporter.subscribe(
-      (employee: Supporter) =>
-      {
-        this.supporter = employee;      
-      }
-    );
-    this.errorSub = this.employeeService.error.subscribe(
+    this.employeeService.supporter$.pipe(
+      takeUntil(this.destroy$)).subscribe(
+        supporter => this.supporter = supporter
+      );
+    this.employeeService.error.pipe(
+      takeUntil(this.destroy$)).subscribe(
       (error: string) =>
       {
         this.error = error;
@@ -95,7 +93,7 @@ export class SupporterEditComponent implements OnInit, OnDestroy, CanComponentDe
   }
   ngOnDestroy()
   {
-    this.supporterSub.unsubscribe();
-    this.errorSub.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

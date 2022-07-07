@@ -1,25 +1,36 @@
-import { Component, ElementRef, OnDestroy, Renderer2, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import ApexCharts from 'apexcharts';
-import { Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { EmployeeService } from '../../employee.service';
 import { SupporterStats } from '../../support/models/supporter-stats-data.model';
+import { Supporter } from '../../support/models/supporter.model';
 
 @Component({
   selector: 'app-bar-chart',
-  templateUrl: './bar-chart.component.html'
+  templateUrl: './bar-chart.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BarChartComponent implements OnDestroy
+export class BarChartComponent implements OnInit, OnDestroy
 {
 
-  constructor(private employeeService: EmployeeService, private renderer:Renderer2) { }
+  constructor(private employeeService: EmployeeService, private renderer: Renderer2,
+    private cdr: ChangeDetectorRef) { }
 
-  statsSub: Subscription;
+
+  destroy$: Subject<boolean> = new Subject<boolean>();
   @ViewChild('chartContainer') container: ElementRef;
+  suppoerter$: Observable<Supporter>;
 
+  ngOnInit()
+  {
+    this.employeeService.setEmployeeObs().pipe(takeUntil(this.destroy$), filter(s=>s!=null)).subscribe();
+    this.suppoerter$ = this.employeeService.supporter$;
+  }
   ngAfterViewInit()
   {
-    this.statsSub = this.employeeService.supporter.pipe(
+    this.employeeService.supporter$.pipe(
+      takeUntil(this.destroy$),
       map(supporter =>
       {
         if (supporter) return supporter.stats;
@@ -28,6 +39,7 @@ export class BarChartComponent implements OnDestroy
     ).subscribe(
       stats =>
       {
+        
         this.renderer.setProperty(this.container.nativeElement, 'innerHTML', '');
         var options = {
           chart: {
@@ -116,6 +128,7 @@ export class BarChartComponent implements OnDestroy
         var chart = new ApexCharts(this.container.nativeElement, options);
 
         chart.render();
+        this.cdr.markForCheck();
       }
     );
    
@@ -148,7 +161,7 @@ export class BarChartComponent implements OnDestroy
   }
   ngOnDestroy(): void
   {
-    if (this.statsSub)
-    this.statsSub.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

@@ -6,39 +6,42 @@
          routerLinkActive="active"
          routerLink="/customers/tickets/new"
          class="d-inline-block text-center">+Open a new ticket</a>
-      <button (click)="onDisplayAllTickets()" class="button-secondary font-weight-bold rounded">All tickets</button>
-      <div *ngIf="tickets!=null && tickets.length > 0 ; else nothingFound" class="card-body">
+      <button (click)="onDisplayAllTickets()" class="button-secondary font-weight-bold rounded">Display All</button>
+      <button (click)="onDisplayOpenTickets()" class="button-secondary font-weight-bold rounded">Display Open</button>
+
+      <div *ngIf="(tickets$ | async)?.length > 0; else nothingFound" class="card-body">
         <h2 class="text-center mb-5">Ticket List</h2>
 
-
-        <div *ngFor="let ticket of pageOfTickets" class="border-bottom row">
-          <div class="col-md-3 p-2 row">
-            <span class="col-md-6">Ticket#: {{ ticket.id }}</span>
-            <span *ngIf="!isCustomer" class="col-md-6">{{ticket.customerName}}</span>
+        <ng-container *ngIf="pageOfTickets$ | async as pageOfTickets">
+          <div *ngFor="let ticket of pageOfTickets" class="border-bottom row">
+            <div class="col-md-3 p-2 row">
+              <span class="col-md-6">Ticket#: {{ ticket.id }}</span>
+              <span *ngIf="!isCustomer" class="col-md-6">{{ticket.customerName}}</span>
+            </div>
+            <div class="col-md-3">
+              <span> {{ ticket.openDate | date :'dd/MM/yyyy-HH:mm'}}</span>
+            </div>
+            <div class="col-md-3">
+              <a *ngIf="isCustomer" routerLinkActive="active" routerLink="/customers/tickets/{{ ticket.id }}" class="d-inline-block center-text"> {{ ticket.title }}</a>
+              <a *ngIf="!isCustomer" routerLinkActive="active" routerLink="/support/tickets/{{ ticket.id }}" class="d-inline-block center-text"> {{ ticket.title }}</a>
+            </div>
+            <span class="col-md-2 text-center">{{ticket.category}}</span>
+            <span [statusColor]="ticket.status" class="col-md-1 text-center">{{ticket.status}}</span>
           </div>
-          <div class="col-md-3">
-            <span> {{ ticket.openDate | date :'dd/MM/yyyy-HH:mm'}}</span>
-          </div>
-          <div class="col-md-3">
-            <a *ngIf="isCustomer" routerLinkActive="active" routerLink="/customers/tickets/{{ ticket.id }}" class="d-inline-block center-text"> {{ ticket.title }}</a>
-            <a *ngIf="!isCustomer" routerLinkActive="active" routerLink="/support/tickets/{{ ticket.id }}" class="d-inline-block center-text"> {{ ticket.title }}</a>
-          </div>
-          <span class="col-md-2 text-center">{{ticket.category}}</span>
-          <span [statusColor]="ticket.status" class="col-md-1 text-center">{{ticket.status}}</span>
-        </div>
-
+        </ng-container>
         <div class="card-footer pb-0 pt-3">
-          <jw-pagination [items]="tickets" (changePage)="onChangePage($event)" [pageSize]="10"></jw-pagination>
+          <jw-pagination [items$]="tickets$" (changePage)="onChangePage($event)" [pageSize]="10"></jw-pagination>
         </div>
 
       </div>
+
       <ng-template #nothingFound>
-        <h3>There are no results.</h3>
+        <h3>No results.</h3>
       </ng-template>
       <div class="col-md-12 row">
 
         <div class="col-md-6">
-          <app-category-filter></app-category-filter>
+          <app-category-filter (category)="onFilterByCategory($event)"></app-category-filter>
         </div>
 
         <div class="col-md-6">
@@ -52,5 +55,5 @@
       <router-outlet></router-outlet>
     </div>
   </div>
-  </div>
 
+</div>

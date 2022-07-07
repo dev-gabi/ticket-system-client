@@ -1,10 +1,11 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit, ViewChild } from '@angular/core';
 import 'chart.js';
 
 @Component({
   selector: 'app-gradient-chart',
   templateUrl: './gradient-chart.component.html',
-  styleUrls: ['./gradient-chart.component.css']
+  styleUrls: ['./gradient-chart.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GradientChartComponent implements OnInit {
   @ViewChild("chart") chart: ChartComponent;

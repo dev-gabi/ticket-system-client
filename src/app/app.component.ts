@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common';
 })
 export class AppComponent implements OnInit
 {
-  constructor(private authService: AuthService, @Inject(PLATFORM_ID) private platformId) {}
+  constructor(private authService: AuthService, @Inject(PLATFORM_ID) private platformId) { }
   ngOnInit(): void
   {
     if (isPlatformBrowser(this.platformId)) {//run this code only if the running platform is a browser - not a server

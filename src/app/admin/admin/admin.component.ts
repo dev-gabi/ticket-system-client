@@ -1,6 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { GeneralStats } from '../../charts/general-stats.model';
 import { EmployeeService } from '../../employee.service';
@@ -9,36 +10,41 @@ import { TopPerformance } from '../../support/models/top-employee-performance-re
 
 @Component({
   selector: 'app-admin',
-  templateUrl: './admin.component.html'
+  templateUrl: './admin.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminComponent implements OnInit, OnDestroy
 {
 
-  constructor(private router: Router, private route: ActivatedRoute, private employeeService: EmployeeService) { }
+  constructor(private router: Router, private route: ActivatedRoute, private employeeService: EmployeeService, private cdr: ChangeDetectorRef) { }
 
   supporterRole = environment.roles.supporter;
   error: string;
-  errorSub: Subscription;
-  selectedSupporterSub: Subscription;
-  generalStatsSub: Subscription;
-  performanceSub: Subscription;
+  destroy$: Subject<boolean> = new Subject<boolean>();
   isSupportersFetched = false;
   topPerformance:TopPerformance = null;
   generalStats: GeneralStats;
 
   ngOnInit(): void
   {
-    this.generalStatsSub = this.employeeService.getGeneralMonthlyStats().subscribe(
-      stats => { this.generalStats = stats; }
+    this.employeeService.getGeneralMonthlyStats().pipe(
+      takeUntil(this.destroy$)).subscribe(
+        stats =>
+        {
+          this.generalStats = stats;
+          this.cdr.detectChanges();
+        }
     );
 
-    this.errorSub = this.employeeService.error.subscribe(
+    this.employeeService.error.pipe(
+      takeUntil(this.destroy$)).subscribe(
       (error: string) =>
       {
         this.error = error;
       }
     );
-    this.selectedSupporterSub = this.employeeService.supporter.subscribe(
+    this.employeeService.supporter$.pipe(
+      takeUntil(this.destroy$)).subscribe(
       supporter =>
       {
         if (supporter)
@@ -49,22 +55,24 @@ export class AdminComponent implements OnInit, OnDestroy
         this.error = error;
       }
     );
-    this.performanceSub = this.employeeService.getTopPerformance().subscribe(
-      (performance: TopPerformance) => { this.topPerformance = performance; },
+    this.employeeService.getTopPerformance().pipe(
+      takeUntil(this.destroy$)).subscribe(
+        (performance: TopPerformance) =>
+        {
+          this.topPerformance = performance;
+          this.cdr.detectChanges();
+        },
       error =>
       {
         this.error = error;
       }
     );
-     
-   
+
   }
 
   ngOnDestroy(): void
   {
-    this.performanceSub.unsubscribe();
-    this.errorSub.unsubscribe();
-    this.selectedSupporterSub.unsubscribe();
-    this.generalStatsSub.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

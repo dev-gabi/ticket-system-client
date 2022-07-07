@@ -1,8 +1,9 @@
-import { Component,  EventEmitter,  Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component,  EventEmitter,  Output } from '@angular/core';
 
 @Component({
   selector: 'app-image-preview',
-  templateUrl: './image-preview.component.html'
+  templateUrl: './image-preview.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImagePreviewComponent  {
 

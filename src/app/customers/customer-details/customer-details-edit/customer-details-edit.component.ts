@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router, UrlTree } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { AuthService } from '../../../auth/auth.service';
 import { CanComponentDeactivate } from '../../../auth/guards/can-deactivate.guard';
 import { CustomersService } from '../../customers.service';
 import { Customer } from '../../models/customer.model';
@@ -9,31 +11,35 @@ import { Customer } from '../../models/customer.model';
 
 @Component({
   selector: 'app-customer-details-edit',
-  templateUrl: './customer-details-edit.component.html'
+  templateUrl: './customer-details-edit.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerDetailsEditComponent implements OnInit, OnDestroy, CanComponentDeactivate
 {
   constructor(private router: Router, private customerService: CustomersService) { }
 
+  customer$: Observable<Customer>;
   customer: Customer;
-  editSub: Subscription;
-  submitEditSub: Subscription;
   editForm: FormGroup;
   confirmQuesion = "Are you sure you want to discard the changes you have made?";
   isConfirmBoxOpen = false;
   allowNavigateAway = false;
   changesSaved = false;
   message: string;
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   ngOnInit(): void
   {
-    this.customer = this.customerService.customer;
+    this.customer$ = this.customerService.customer$;
+    this.customer$.pipe(takeUntil(this.destroy$))
+      .subscribe(
+        customer =>
+        {
+          this.customer = customer;
+          this.initForm();
+        },
+        error => { this.message = error });
 
-    this.editSub = this.customerService.selectedCustomer.subscribe((cus: Customer) =>
-    {
-      this.customer = cus;
-    });
-    this.initForm();
   }
   initForm()
   {
@@ -57,8 +63,16 @@ export class CustomerDetailsEditComponent implements OnInit, OnDestroy, CanCompo
       true,
       new Date(),
     );
-    this.submitEditSub = this.customerService.editCustomer(editedCustomer);
-    this.router.navigate(['customers']);
+
+    this.customerService.editCustomer(editedCustomer).pipe(takeUntil(this.destroy$))
+      .subscribe(
+        customer =>
+        {
+          this.customer = customer;
+          this.router.navigate(['customers']);
+        },
+        error => { this.message = error }
+    );
   }
 
   onCancelEdit()
@@ -85,9 +99,7 @@ export class CustomerDetailsEditComponent implements OnInit, OnDestroy, CanCompo
   }
   ngOnDestroy(): void
   {
-    this.editSub.unsubscribe();
-    if (this.submitEditSub) {
-      this.submitEditSub.unsubscribe();
-    }
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

@@ -16,8 +16,11 @@ import { AllowSubmitDirective } from './directives/allow-submit.directive';
 import { ReactiveFormLabelValidationComponent } from './reactive-form-label-validation/reactive-form-label-validation.component';
 import { TdFormLabelValidationComponent } from './td-form-label-validation/td-form-label-validation.component';
 import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
-import { SearchComponent } from './search/search.component';
+import { Search2Component } from './search/search2.component';
 import { NotFoundComponent } from './http-error/not-found/not-found.cmponent';
+import { SearchContentComponent } from './search/search-content/search-content.component';
+import { SearchUserComponent } from './search/search-user/search-user.component';
+
 
 
 @NgModule({
@@ -37,7 +40,9 @@ import { NotFoundComponent } from './http-error/not-found/not-found.cmponent';
     ReactiveFormLabelValidationComponent,
     TdFormLabelValidationComponent,
     LoadingSpinnerComponent,
-    SearchComponent
+    Search2Component,
+    SearchContentComponent,
+    SearchUserComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +63,8 @@ import { NotFoundComponent } from './http-error/not-found/not-found.cmponent';
     ReactiveFormLabelValidationComponent,
     TdFormLabelValidationComponent,
     LoadingSpinnerComponent,
-    SearchComponent
+    Search2Component
+
   ]
 })
 export class SharedModule { }

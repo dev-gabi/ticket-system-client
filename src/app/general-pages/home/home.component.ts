@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +15,8 @@ import { Component } from '@angular/core';
 @media (max-width:576px){
    .white-transparent-back{background-color:rgba(255, 255, 255, 0.5);}
 }
-`]
+`],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent  {
 

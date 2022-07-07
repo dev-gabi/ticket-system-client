@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
+import { AuthService } from './auth/auth.service';
 import { GeneralStats } from './charts/general-stats.model';
 import { BaseUser } from './shared/base-user.model';
 import { Supporter } from './support/models/supporter.model';
@@ -14,16 +15,25 @@ import { TopPerformance } from './support/models/top-employee-performance-respon
 })
 export class EmployeeService
 {
-  supporter = new BehaviorSubject<Supporter>(null);
+  private supporter = new BehaviorSubject<Supporter>(null);
+  supporter$ = this.supporter.asObservable();
   error = new Subject<string>();
   searchUserList = new Subject<BaseUser[]>();
+  supporterRple = environment.roles.supporter;
 
-  constructor( private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
+  setEmployeeObs()
+  {
+    if (this.authService.user.value.role == this.supporterRple) {
+      const id = this.authService.user.value.id;
+      return this.getEmployeeById(id);
+    }
+    return of();
+  }
 
   getEmployeeById(id: string)
   {
-    const stringIdModel: IdAsString = { id: id };
-    return this.http.post<Supporter>(environment.endpoints.employees.getEmployeeById, stringIdModel).pipe(
+    return this.http.post<Supporter>(environment.endpoints.employees.getEmployeeById, { id: id }).pipe(
       catchError(this.handleError),
       tap((user: Supporter) =>
       {
@@ -61,15 +71,13 @@ export class EmployeeService
 
   getTypeAheadUsers(usersInRole: string, nameSearch: string)
   {
-    if (!nameSearch) { return of();}
-    const searchModel = new Search(usersInRole, nameSearch);
-
+    const searchModel: Search = { role: usersInRole, searchInput: nameSearch };
     return this.http.post<BaseUser[]>(environment.endpoints.employees.searchUsers, searchModel).pipe(
       catchError((response: HttpErrorResponse) =>
       {
         return throwError(response.error);
       }),
-      tap(users => { this.searchUserList.next(users); })
+      tap(users => { this.searchUserList.next(users) })
     );
   }
   handleError(response: HttpErrorResponse)
@@ -101,11 +109,9 @@ export class EmployeeService
   }
 }
 
-export interface IdAsString
+
+export interface Search
 {
-  id: string;
-}
-export class Search
-{
-  constructor(public role: string, public searchInput:string) { }
+  role: string;
+  searchInput: string;
 }

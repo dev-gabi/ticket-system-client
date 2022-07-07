@@ -6,6 +6,7 @@ import { BehaviorSubject, Subject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { BaseUser } from '../shared/base-user.model';
+import { TicketService2 } from '../tickets/ticket.service2';
 import { ApiResponse } from './models/api-response.model';
 import { AuthUser } from './models/auth-user.model';
 import { CustomerRegisterModel } from './models/customer-register.model';

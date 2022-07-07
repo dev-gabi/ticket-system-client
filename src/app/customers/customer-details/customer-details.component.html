@@ -1,5 +1,5 @@
 <div class="c-component slide-in-from-left col-md-12 text-large">
-  <div>
+  <div *ngIf="customer$ | async as customer; else loading">
     <h2 class="text-center">Personal Details:</h2>
     <p class="text-center">
       Name: {{customer.name}}<br />
@@ -10,5 +10,9 @@
     <br />
     <button (click)="onEdit()" class="button mx-auto rounded d-block">Edit Details</button>
   </div>
+  <ng-template #loading>
+    <app-loading-spinner></app-loading-spinner>
+  </ng-template>
+
 </div>
 

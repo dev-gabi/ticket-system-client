@@ -1,47 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../auth/auth.service';
 import { CustomersService } from '../customers.service';
-import { Customer } from '../models/customer.model';
 
 @Component({
   selector: 'app-customer-panel',
-  templateUrl: './customer-panel.component.html'
+  templateUrl: './customer-panel.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerPanelComponent implements OnInit, OnDestroy
+export class CustomerPanelComponent implements OnInit
 {
-
-  customer: Customer;
-  customerChangedSub: Subscription;
-  getCustomerSub: Subscription;
+  constructor(private authService: AuthService,  private customerService: CustomersService) {}    
   displayTicketList = false;
-  errorMessage: string;
-  constructor(private authService: AuthService, private customerService: CustomersService)
-  {  }
-
-  ngOnInit(): void
+   
+  ngOnInit()
   {
     const id = this.authService.user.value.id;
-    this.getCustomerSub = this.customerService.getCustomerById(id).subscribe(
-      (customer: Customer) =>
-      {
-        this.customer = customer
-      }
-    );
+    this.customerService.getCustomerById(id);
+  }
 
-    this.customerChangedSub = this.customerService.selectedCustomer.subscribe(changedCustomer =>
-    {
-      this.customer = changedCustomer;
-    });
-   
-  }
-  onHandleError()
-  {
-    this.errorMessage = null;
-  }
-  ngOnDestroy(): void
-  {
-    this.getCustomerSub.unsubscribe();
-    this.customerChangedSub.unsubscribe();
-  }
+
 }

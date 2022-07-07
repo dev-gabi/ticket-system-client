@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { EmployeeService } from '../../../employee.service';
 import { Supporter } from '../../../support/models/supporter.model';
 
@@ -14,25 +14,16 @@ export class SupporterDetailsComponent  {
 
   constructor(private route: ActivatedRoute, private router: Router, private employeeService: EmployeeService) { }
 
-  supporter: Supporter;
-  userSub: Subscription;
+  supporter$: Observable<Supporter>;
 
   ngOnInit(): void
   {
-    this.userSub = this.employeeService.supporter.subscribe(
-      employee =>
-      {
-        this.supporter = employee;
-      }
-    );
+    this.supporter$ = this.employeeService.supporter$;
   }
 
   onEdit()
   {
     this.router.navigate(['edit'], { relativeTo: this.route });
   }
-  ngOnDestroy()
-  {
-    this.userSub.unsubscribe();
-  }
+
 }

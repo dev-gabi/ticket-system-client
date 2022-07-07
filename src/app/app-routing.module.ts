@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { AuthLogComponent } from './admin/auth-log/auth-log.component';
-import { ErrorLogComponent } from './admin/error-log/error-log.component';
+
 import { AdminAuthGuard } from './auth/guards/admin.guard';
 import { HowToUseComponent } from './general-pages/how-to-use/how-to-use.component';
 import { HomeComponent } from './general-pages/home/home.component';
 import { ForbiddenComponent } from './shared/http-error/forbidden/forbidden.component';
 import { NotFoundComponent } from './shared/http-error/not-found/not-found.cmponent';
+import { ErrorLogComponent } from './admin/logs/error-log/error-log.component';
+import { AuthLogComponent } from './admin/logs/auth-log/auth-log.component';
 
 
 

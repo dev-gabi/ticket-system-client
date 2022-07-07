@@ -1,51 +1,56 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { fromEvent, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { TicketService } from '../../ticket.service';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { fromEvent, Observable, Subject, Subscription } from 'rxjs';
+import { map, skip, takeUntil, tap } from 'rxjs/operators';
+import { TicketService2 } from '../../ticket.service2';
 
 @Component({
   selector: 'app-category-filter',
-  templateUrl: './category-filter.component.html'
+  templateUrl: './category-filter.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoryFilterComponent implements OnInit, OnDestroy
+export class CategoryFilterComponent implements OnInit, OnDestroy, AfterViewInit
 {
-  constructor(private ticketService: TicketService) { }
+  constructor(private ticketService: TicketService2, private cdr: ChangeDetectorRef) { }
 
   @ViewChild('input') input: ElementRef;
+  @Output('category') category = new EventEmitter<string>();
   hideCategories = true;
   selectedCategory: string = null;
-  categories: string[] = [];
-  categoriesSub: Subscription;
   clicks$ = fromEvent(document, 'click');
-  clicksSub: Subscription;
-
+  categories$: Observable<string[]>;
+  destroy$: Subject<boolean> = new Subject<boolean>(); 
 
   ngOnInit(): void
   {
-    this.categoriesSub = this.ticketService.getCategories().subscribe(
-      (categories: string[]) => { this.categories = categories; }
-    );
-    this.clicksSub = this.clicks$.pipe(map((event: any) =>
+    this.categories$ = this.ticketService.categories$;
+  }
+
+  ngAfterViewInit()
+  {
+    this.clicks$.pipe(
+      skip(2),
+      takeUntil(this.destroy$),
+      map((event: any) =>
     {
       return (event.target.id !== 'categories' && event.target.id !== 'categorySelect') ? true : false;
     }))
       .subscribe((shouldHideResultList: boolean) =>
       {
         this.hideCategories = shouldHideResultList;
+        this.cdr.markForCheck();
       });
   }
-
   onSelectCategory(category:string)
   {
     this.hideCategories = true;
     this.selectedCategory = category;
     this.input.nativeElement.value = category;
-    this.ticketService.filterByCategory(this.selectedCategory);
+    this.category.emit(category);
     this.selectedCategory = null;
   }
   ngOnDestroy(): void
   {
-    this.categoriesSub.unsubscribe();
-    this.clicksSub.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

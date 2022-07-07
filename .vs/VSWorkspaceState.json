@@ -3,9 +3,12 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\shared",
-    "\\src\\app\\shared\\search"
+    "\\src\\app\\auth",
+    "\\src\\app\\auth\\guards",
+    "\\src\\app\\tickets\\image-preview",
+    "\\src\\app\\tickets\\ticket",
+    "\\src\\app\\tickets\\ticket\\ticket-reply"
   ],
-  "SelectedNode": "\\src\\app\\shared\\search\\search.component.ts",
-  "PreviewInSolutionExplorer": false
+  "SelectedNode": "\\src\\app\\auth\\auth-interceptor.service.ts",
+  "PreviewInSolutionExplorer": true
 }

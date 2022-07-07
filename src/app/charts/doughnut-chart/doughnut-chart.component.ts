@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit, Input } from "@angular/core";
+import { Component, ViewChild, OnInit, Input, ChangeDetectionStrategy, ChangeDetectorRef } from "@angular/core";
 import { ChartComponent } from "ng-apexcharts";
 import
   {
@@ -24,11 +24,12 @@ export type ChartOptions = {
 
 @Component({
   selector: 'app-doughnut-chart',
-  templateUrl: './doughnut-chart.component.html'
+  templateUrl: './doughnut-chart.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class  doughnutChartComponent implements OnInit {
 
-  constructor() { }
+  constructor( private cdr: ChangeDetectorRef) { }
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   @Input('stats') stats: GeneralStats;
@@ -85,6 +86,7 @@ export class  doughnutChartComponent implements OnInit {
             }
           }
         ]
-      };
+    };
+    this.cdr.detectChanges();
   }
 }

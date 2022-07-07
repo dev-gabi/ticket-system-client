@@ -1,0 +1,12 @@
+<input type="text" #searchInput class="w-100 btn Ingredient" minLength="2" />
+
+
+<ul *ngIf="!hide" class="search-ul w-100 select" id="resultList">
+  <ng-container *ngFor="let item of users">
+    <li *ngIf="item.id" (click)="onSelectUser(item.id)" class="pointer">{{item.name}}</li>
+    <li *ngIf="!item.id" class="pointer">{{item.name}}</li>
+  </ng-container>
+ 
+  <li *ngIf="users.length< 1 "> No results</li>
+</ul>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

@@ -1,32 +1,32 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Params, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { AuthUser } from '../../auth/models/auth-user.model';
-import { TicketService } from '../ticket.service';
+import { TicketService2 } from '../ticket.service2';
 
 @Component({
   selector: 'app-new-ticket',
-  templateUrl: './new-ticket.component.html'
+  templateUrl: './new-ticket.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
     })
 
-export class NewTicketComponent implements OnInit, OnDestroy
+export class NewTicketComponent implements OnInit
+
 {
   user: AuthUser;
   imageFile: File;
-  errorMessage: string;
-  categories: string[];
-  categoriesSub: Subscription;
+  message: string = null;
+  categories$: Observable<string[]>;
 
-  constructor(private ticketService: TicketService, private authService: AuthService, private router: Router) { }
+
+  constructor(private ticketService: TicketService2, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void
   {
     this.user = this.authService.user.value;
-    this.categoriesSub = this.ticketService.getCategories().subscribe(
-      (categories: string[]) => { this.categories = categories; }
-    );
+    this.categories$ = this.ticketService.categories$;
   }
 
   setFile(fileOutput:File)
@@ -36,17 +36,14 @@ export class NewTicketComponent implements OnInit, OnDestroy
 
   onSubmit(form: NgForm)
   {
-    this.ticketService.addNew({ title: form.value.title, message: form.value.initialReply, category: form.value.category , image: this.imageFile }).subscribe(
+    this.ticketService.addNew({ title: form.value.title, message: form.value.initialReply, category: form.value.category, image: this.imageFile })
+      .subscribe(
       () =>
       {
         this.router.navigate(['/customers/tickets']);
       },
-      error => this.errorMessage
+      error => this.message = error
     );
   
-  }
-  ngOnDestroy(): void
-  {
-    this.categoriesSub.unsubscribe();
   }
 }

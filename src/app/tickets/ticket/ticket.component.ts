@@ -1,26 +1,27 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
+import { delay, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { Ticket } from '../models/ticket.model';
-import { TicketService } from '../ticket.service';
+import { TicketService2 } from '../ticket.service2';
 
 
 @Component({
   selector: 'app-ticket',
-  templateUrl: './ticket.component.html'
+  templateUrl: './ticket.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TicketComponent implements OnInit
+export class TicketComponent implements OnDestroy, OnInit
 {
-  constructor(private ticketService: TicketService, private route: ActivatedRoute, private router: Router, private authService: AuthService) { }
+  constructor(private ticketService2: TicketService2, private route: ActivatedRoute,
+     private authService: AuthService, private cdr: ChangeDetectorRef) { }
 
-  ticket: Ticket;
+  ticket$: Observable<Ticket>;
   ticketId: number;
-  paramsIdSub: Subscription;
-  ticketChangedSub: Subscription;
-  subscriptions: Subscription[] = [];
+  destroy$: Subject<boolean> = new Subject<boolean>();
   open = environment.ticketStatus.open;
   closed = environment.ticketStatus.closed;
   isCustomer: boolean;
@@ -33,39 +34,34 @@ export class TicketComponent implements OnInit
   confirmQuestion = "Are you sure you want to close this ticket?";
   ngOnInit(): void
   {
+   
     this.isCustomer = this.authService.user.value.role === environment.roles.customer;
-    this.paramsIdSub = this.route.params.subscribe((params: Params) =>
-    {
-      this.ticketId = +params['id'];
-      this.ticket = this.ticketService.getById(this.ticketId);
-
-    })
-
-    this.ticketChangedSub = this.ticketService.selectedTicket.subscribe((ticket: Ticket) =>
-    {
-      this.ticket = ticket;
-    });
-    this.subscriptions.push(this.paramsIdSub, this.ticketChangedSub);
-  }
-
-  onAddReply(formData: { reply: string, innerReplyChecked:boolean })
-  {
-    let isInnerReply;
-    !formData.innerReplyChecked ? isInnerReply = false : isInnerReply = true;
-
-    this.ticketService.addReply(this.ticket.id, formData.reply, isInnerReply, this.imageFile).subscribe(
-      ticket =>
+    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(
+      (params: Params) =>
       {
-        this.ticket = ticket;
-
+        this.ticketId = +params['id'];
+        this.ticket$ = this.ticketService2.getSelectedTicket(this.ticketId);
+        this.cdr.markForCheck();
+   
       }
-      ,error =>
+    )
+
+    this.ticketService2.error$.pipe(takeUntil(this.destroy$)).subscribe(
+      error =>
       {
         this.responseMessage = error;
+        this.cdr.markForCheck();
       }
-    );
-    this.imageFile = null;
-    this.addReplyForm.reset();
+    )
+  }
+
+  onAddReply(formData: { reply: string, innerReplyChecked: boolean })
+  {
+    let isInnerReply;
+    formData.innerReplyChecked ? isInnerReply = true:  isInnerReply = false;
+    this.ticket$ = this.ticketService2.addReply(this.ticketId, formData.reply, isInnerReply, this.imageFile);
+    //this.imageFile = null;
+   // this.addReplyForm.reset();
   }
   setFile(fileOutput: File)
   {
@@ -85,22 +81,15 @@ export class TicketComponent implements OnInit
   }
   onConfirm()
   {
-    this.ticketService.closeTicket(this.ticketId).subscribe(
-      response =>
-      {
-        this.responseMessage = response.message;
-      },
-      error =>
-      {
-        this.responseMessage = error;
-      }
-    );
+    this.ticket$ = this.ticketService2.closeTicket(this.ticketId);
     this.confirmCloseTicket = false;
-    this.router.navigate(["../"], { relativeTo: this.route });
+  //  this.router.navigate(["../"], { relativeTo: this.route }); //causes exception 
   }
 
   ngOnDestroy()
   {
-    this.subscriptions.forEach(s => s.unsubscribe());
+
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }

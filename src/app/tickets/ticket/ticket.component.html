@@ -1,4 +1,4 @@
-<div class="c-component text-center fade-in " *ngIf="ticket">
+<div class="c-component text-center fade-in " *ngIf="ticket$ | async as ticket">
   <div>
       <span [statusColor]="ticket.status" class="text-start float-left">
         ticket status: {{ticket.status}} <span *ngIf="ticket.status===closed">at {{ticket.closingDate  |date :'dd/MM/yyyy-HH:mm'}}</span>

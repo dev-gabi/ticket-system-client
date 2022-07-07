@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, throwError } from 'rxjs';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Customer } from './models/customer.model';
 
@@ -13,22 +13,19 @@ export class CustomersService {
   constructor( private http: HttpClient)
   {
   }
-  selectedCustomer = new Subject<Customer>();
-  customer: Customer;
+  customerSubject = new BehaviorSubject<Customer>(null);
+  customer$ = this.customerSubject.asObservable();
 
   getCustomerById(id: string)
   {
-    return this.http.get<Customer>(environment.endpoints.customers.getById + id).pipe(
+     this.http.get<Customer>(environment.endpoints.customers.getById + id).pipe(
       catchError((response: HttpErrorResponse) =>
       {
-       return throwError(response.error);
+        return throwError(response.error);
       }),
-      tap(customer => { this.customer = customer }),
-      map((customer: Customer) =>
-      {
-        return customer;
-      }
-    ))
+      tap(customer => { this.customerSubject.next(customer) }
+
+      )).subscribe();
   }
 
   editCustomer(customer:Customer)
@@ -37,13 +34,8 @@ export class CustomersService {
       catchError((response: HttpErrorResponse) =>
       {
         return throwError(response.error);
-      }))
-      .subscribe(
-      customer =>
-      {
-          this.selectedCustomer.next(customer);
-          this.customer = customer;
-      }   
+      }),
+      tap(customer => this.customerSubject.next(customer))
     );
   }
 }

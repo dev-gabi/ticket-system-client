@@ -42,12 +42,12 @@
       </div>
     </div>
     <br />
-    <div class="row">
+    <div class="row" *ngIf="categories$ | async as categories">
       <div class="col-md-3">
         <app-td-form-label-validation [inputName]="category"></app-td-form-label-validation>
         <label>Category</label>
       </div>
-      <div class="col-md-5">
+      <div class="col-md-5 ">
         <select ngModel #category="ngModel" name="category" required class="border w-100">      
           <option *ngFor="let category of categories" value="{{category}}">{{category}}</option>
         </select>
@@ -57,10 +57,10 @@
       </div>
     </div><br/>
     <button type="submit" [disabled]="newTicketForm.invalid" class="button d-inline-block mr-2" [allowSubmit]="newTicketForm.valid"> Submit </button>
-    <a routerLink="/panel/tickets"
+    <a routerLink="/customers/tickets"
        class="button d-inline-block bg-secondary">Cancel</a>
     <br />
   </form>
 
 </div>
-<app-alert *ngIf="errorMessage != null" [message]="errorMessage" (close)="this.errorMessage = null"></app-alert>
+<app-alert *ngIf="message != null" [message]="message" (close)="this.message = null"></app-alert>

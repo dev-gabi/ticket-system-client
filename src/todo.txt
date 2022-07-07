@@ -1,0 +1,15 @@
+
+   todo: error handling in ticket service - ticket service line 246!!! subject undefined
+
+
+auth module:
+  change detection strategy
+  make user Subject private and create user$ observable
+
+shared module: change detection onPush
+
+change all models to interface
+
+add reply with image gets redirected by all guards  - why is this being redirected after submission?
+uncomment canActivate in customers-routing-module
+
