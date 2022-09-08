@@ -1,10 +1,8 @@
-export class ApiResponse
+export interface ApiResponse
 {
-    constructor(
-      public message: string,
-      public isSuccess: boolean,
-      public statusCode:string,
-      public statusCodeTitle:string,
-      public errors?: string[]
-    ) { }
+  message: string;
+  isSuccess: boolean;
+  statusCode: string;
+  statusCodeTitle: string;
+  errors?: string[];
 }

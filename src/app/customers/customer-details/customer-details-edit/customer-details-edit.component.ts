@@ -1,77 +1,62 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router, UrlTree } from '@angular/router';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../../auth/auth.service';
-import { CanComponentDeactivate } from '../../../auth/guards/can-deactivate.guard';
+import { CanFormDeactivate } from '../../../auth/guards/form-deactivate.guard';
+import { CustomersBase } from '../../customers-base';
 import { CustomersService } from '../../customers.service';
 import { Customer } from '../../models/customer.model';
-
+import { CustomersQuery } from '../../store/customers.query';
 
 @Component({
   selector: 'app-customer-details-edit',
   templateUrl: './customer-details-edit.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CustomerDetailsEditComponent implements OnInit, OnDestroy, CanComponentDeactivate
+export class CustomerDetailsEditComponent extends CustomersBase implements OnInit, CanFormDeactivate
 {
-  constructor(private router: Router, private customerService: CustomersService) { }
+  constructor(private router: Router, protected customerService: CustomersService,
+    protected authService: AuthService, protected query: CustomersQuery, private cdr: ChangeDetectorRef)
+  { super(customerService, query, authService); }
 
-  customer$: Observable<Customer>;
-  customer: Customer;
-  editForm: FormGroup;
-  confirmQuesion = "Are you sure you want to discard the changes you have made?";
-  isConfirmBoxOpen = false;
-  allowNavigateAway = false;
-  changesSaved = false;
-  message: string;
-  destroy$: Subject<boolean> = new Subject<boolean>();
+  immutableCustomer: Customer;
+  customerEdit$: Observable<Customer>;
+  isConfirmDialogOpen = false;
+  isSaved = false;
+  confirmSubject= new Subject<boolean>();
+  error$: Observable<string>;
+  @ViewChild('f') form: NgForm;
 
   ngOnInit(): void
   {
-    this.customer$ = this.customerService.customer$;
-    this.customer$.pipe(takeUntil(this.destroy$))
-      .subscribe(
-        customer =>
-        {
-          this.customer = customer;
-          this.initForm();
-        },
-        error => { this.message = error });
+    this.error$ = this.customerService.error$;
+    this.checkIfCustomerLoaded();
+    this.customerEdit$ = this.query.selectActive() as Observable<Customer>;
+  }
 
-  }
-  initForm()
+  onSubmit(formData: {name:string, email:string, address:string, phoneNumber:string})
   {
-    this.editForm = new FormGroup({
-      'name': new FormControl(this.customer.name, [Validators.required, Validators.minLength(2)]),
-      'email': new FormControl(this.customer.email, [Validators.required, Validators.email]),
-      'address': new FormControl(this.customer.address, Validators.required),
-      'phoneNumber': new FormControl(this.customer.phoneNumber, [Validators.required])
-    })
-  }
-  onSubmit()
-  {
-    this.changesSaved = true;
-    const editedCustomer = new Customer(
-      this.customer.id,
-      this.editForm.get('name').value,
-      this.customer.role,
-      this.editForm.get('email').value,
-      this.editForm.get('address').value,
-      this.editForm.get('phoneNumber').value,     
-      true,
-      new Date(),
-    );
+    this.immutableCustomer = this.query.getActive() as Customer;
+    this.isSaved = true;
+
+    const editedCustomer: Customer = {
+      id: this.immutableCustomer.id,
+      name: formData.name,
+      role: this.immutableCustomer.role,
+      email: formData.email,
+      address: formData.address,
+      phoneNumber: formData.phoneNumber,
+      isActive: true,
+      registrationDate: new Date(),
+    };
 
     this.customerService.editCustomer(editedCustomer).pipe(takeUntil(this.destroy$))
-      .subscribe(
-        customer =>
+      .subscribe( () =>
         {
-          this.customer = customer;
           this.router.navigate(['customers']);
-        },
-        error => { this.message = error }
+        }
     );
   }
 
@@ -79,27 +64,21 @@ export class CustomerDetailsEditComponent implements OnInit, OnDestroy, CanCompo
   {
     this.router.navigate(['customers']);
   }
-  onConfirm()
-  {
-    this.isConfirmBoxOpen = false;
-    this.allowNavigateAway = true;
-    this.router.navigate(['customers']);
-  }
-  canDeactivate(): boolean | Observable<boolean> | Promise<boolean> | UrlTree
-  {
-    if (this.changesSaved) { return true;}
-    if (this.editForm.get('name').value != this.customer.name || this.editForm.get('address').value != this.customer.address ||
-      this.editForm.get('phoneNumber').value != this.customer.phoneNumber) {
-      this.isConfirmBoxOpen = true;
-      return this.allowNavigateAway;
-    } else {
-     return true;
-    }
 
-  }
-  ngOnDestroy(): void
+  openConfirmDialog()
   {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
+    this.isConfirmDialogOpen = true;
+    this.cdr.markForCheck();
   }
+  onConfirm(isConfirmed: boolean)
+  {
+    this.confirmSubject.next(isConfirmed);
+    this.isConfirmDialogOpen = false;
+  }
+
+  onCloseAlert()
+  {
+    this.customerService.clearError();
+  }
+
 }

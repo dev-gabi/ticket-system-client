@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-hamburger-menu',
   templateUrl: './hamburger-menu.component.html',
-  styleUrls: ['./hamburger-menu.component.css']
+  styleUrls: ['./hamburger-menu.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HamburgerMenuComponent  {
 

@@ -11,10 +11,7 @@ import { HowToUseComponent } from './general-pages/how-to-use/how-to-use.compone
 import { HomeComponent } from './general-pages/home/home.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
-//import { CustomersModule } from './customers/customers.module';
-//import { AuthModule } from './auth/auth.module';
-//import { SupportModule } from './support/support.module';
-//import { AdminModule } from './admin/admin.module';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -35,10 +32,6 @@ import { environment } from '../environments/environment';
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     })
-  //  CustomersModule,
-  //  AuthModule,
-  //  SupportModule,
-  //  AdminModule
   ],
   providers: [
     {

@@ -13,6 +13,6 @@
   <ng-template #loading>
     <app-loading-spinner></app-loading-spinner>
   </ng-template>
-
 </div>
 
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

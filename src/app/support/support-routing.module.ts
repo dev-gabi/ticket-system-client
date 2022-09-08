@@ -5,8 +5,6 @@ import { TicketComponent } from '../tickets/ticket/ticket.component';
 import { StatsComponent } from './stats/stats.component';
 import { SupportComponent } from './support/support.component';
 
-
-
 const routes: Routes = [
   {
     path: '', component: SupportComponent,
@@ -18,7 +16,7 @@ const routes: Routes = [
               },       
         ]
   },
-  { path: 'stats', component: StatsComponent },
+  { path: 'stats', component: StatsComponent, canActivate: [EmployeeAuthGuard], },
 ];
 
 @NgModule({

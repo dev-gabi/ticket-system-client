@@ -1,16 +1,13 @@
-export class TopPerformance
+export interface TopPerformance
 {
-  constructor(
-    public employeeStats: EmployeeStats[],
-    public maxValue: number
-  ) { }
+
+  employeeStats: EmployeeStats[];
+  maxValue: number;
+
 }
 
-export class EmployeeStats
+export interface EmployeeStats
 {
-  constructor(
-    public ticketsClosed: number,
-      public userName: string
-
-  ) { }
+     ticketsClosed: number;
+     userName: string;
 }

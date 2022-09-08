@@ -6,7 +6,6 @@ import { Directive,  HostBinding, Input, OnInit } from '@angular/core';
 
 export class AllowSubmitDirective implements OnInit
 {
-  constructor() { }
   @Input() allowSubmit: boolean ;
   defautCursorStyle = 'not-allowed';
   pointerCursorStyle = 'pointer';

@@ -4,7 +4,7 @@
         ticket status: {{ticket.status}} <span *ngIf="ticket.status===closed">at {{ticket.closingDate  |date :'dd/MM/yyyy-HH:mm'}}</span>
       </span><br />
       <button *ngIf="ticket.status===open"
-              (click)="onCloseTicket()"
+              (click)="confirmCloseTicket = true"
               class="button-secondary bg-danger float-left">
         Close ticket
       </button>
@@ -46,6 +46,5 @@
   </div>
 
 </div>
-
-<app-confirm *ngIf="confirmCloseTicket" [question]="confirmQuestion" (confirm)="onConfirm()" (close)="onCloseConfirm()"></app-confirm>
-<app-alert *ngIf="responseMessage!=null" [message]="responseMessage" (close)="onCloseAlert()"></app-alert>
+<app-confirm-dialog *ngIf="confirmCloseTicket" [question]="'Are you sure you want to close this ticket?'" (isConfirmed)="onConfirm($event)"></app-confirm-dialog>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

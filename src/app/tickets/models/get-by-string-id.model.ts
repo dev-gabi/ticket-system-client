@@ -1,4 +1,4 @@
-export class GetByStringId
+export interface GetByStringId
 {
-  constructor(private id: string) {}
+  id: string;
 }

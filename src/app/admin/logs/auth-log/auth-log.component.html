@@ -9,11 +9,11 @@
         <div class="col-md-3"><b>Details</b></div>
         <div class="col-md-3"><b>Action</b></div>
       </div>
-      <ng-template #loading>
-        <app-loading-spinner></app-loading-spinner>
-      </ng-template>
 
-      <div class="card-body col-md-12" *ngIf="logs$ | async; else loading;">
+        <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+
+      <div class="card-body col-md-12" *ngIf="logs$ | async">
         <ng-container *ngIf="logPage$ | async as logPage">
           <div *ngFor="let log of logPage" class="border-bottom row">
 
@@ -30,3 +30,4 @@
     </div>
   </div>
 </div>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

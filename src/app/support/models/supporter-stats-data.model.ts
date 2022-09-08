@@ -1,18 +1,11 @@
-export class SupporterStatsData
+export interface SupporterStatsData
 {
-  constructor(
-    public supporterStats: SupporterStats[],
-    public error:string
-  )
-  { }
+  supporterStats: SupporterStats[];
+  error: string;
 }
-
-export class SupporterStats
+export interface SupporterStats
 {
-  constructor(
-    public ticketsClosed: number,
-    public replies: number,
-    public date: Date
-  )
-  { }
+  ticketsClosed: number;
+  replies: number;
+  date: Date;
 }

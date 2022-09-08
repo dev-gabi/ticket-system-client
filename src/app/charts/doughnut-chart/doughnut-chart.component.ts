@@ -9,7 +9,8 @@ import
     ApexLegend,
     ApexDataLabels
   } from "ng-apexcharts";
-import { GeneralStats } from '../general-stats.model';
+import { GeneralStats } from '../../admin/models/general-stats.model';
+
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -38,7 +39,7 @@ export class  doughnutChartComponent implements OnInit {
   {
     this.totalSum = this.stats.totalClosedTickets + this.stats.totalReplies;
 
-    const precentToValue = (val: number) => (val * this.totalSum) / 100;
+    const precentToValue = (val: number) => Math.trunc((val * this.totalSum) / 100);
 
     this.chartOptions = {
       series: [this.stats.totalClosedTickets, this.stats.totalReplies],

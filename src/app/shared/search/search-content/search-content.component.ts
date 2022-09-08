@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,  Input,  OnDestroy,  ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { TicketService2 } from '../../../tickets/ticket.service2';
+import { map, takeUntil, tap } from 'rxjs/operators';
+import { TicketService3 } from '../../../tickets/ticket.service3';
+
 
 @Component({
   selector: 'app-search-content',
@@ -11,11 +12,9 @@ import { TicketService2 } from '../../../tickets/ticket.service2';
 export class SearchContentComponent implements AfterViewInit, OnDestroy
 {
 
-  constructor(private ticketService: TicketService2, private cdr: ChangeDetectorRef) { }
-
+  constructor(private ticketService: TicketService3, private cdr: ChangeDetectorRef) { }
 
   @ViewChild('searchInput') searchInput: ElementRef;
-  @Input('isCustomer') isCustomer: boolean;
   
   isLoading = false;
   clicks$ = fromEvent(document, 'click');
@@ -27,22 +26,15 @@ export class SearchContentComponent implements AfterViewInit, OnDestroy
       this.searchInput.nativeElement,
       'keyup'
     ).pipe(
-      takeUntil(this.destroy$),
-      tap(() =>
-      {
-        this.isLoading = true;
-        this.cdr.detectChanges();
-      }),
       map((event) => event.target.value),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap(searchInput =>
+       tap(searchInput =>
       {     
-        return this.ticketService.typeAheadSearch(searchInput, this.isCustomer)
-      })).
+         this.ticketService.typeAheadFilterByContent(searchInput)
+       }),
+      takeUntil(this.destroy$)
+    ).
       subscribe(() =>
-        {
-          this.isLoading = false;
+      {   this.isLoading = false;
           this.cdr.detectChanges();
         }
       );

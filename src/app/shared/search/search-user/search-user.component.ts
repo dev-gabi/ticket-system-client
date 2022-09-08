@@ -1,12 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { fromEvent, Observable, Subject } from 'rxjs';
+import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { EmployeeService } from '../../../employee.service';
-import { TicketService2 } from '../../../tickets/ticket.service2';
-import { BaseUser } from '../../base-user.model';
 import { environment } from 'src/environments/environment';
-import { Supporter } from '../../../support/models/supporter.model';
+import { CustomersService } from '../../../customers/customers.service';
+import { CustomersQuery } from '../../../customers/store/customers.query';
+import { SupportersQuery } from '../../../support/store/supporters.query';
+import { SupportService } from '../../../support/support.service';
+import { TicketService3 } from '../../../tickets/ticket.service3';
+import { DestroyPolicy } from '../../../utils/destroy-policy';
+import { BaseUser } from '../../base-user.model';
+
 
 @Component({
   selector: 'app-search-user',
@@ -14,104 +18,110 @@ import { Supporter } from '../../../support/models/supporter.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SearchUserComponent implements OnInit, OnDestroy, AfterViewInit
+export class SearchUserComponent extends DestroyPolicy implements OnInit, AfterViewInit
 {
   constructor(
-    private ticketService: TicketService2,
+    private ticketService: TicketService3,
     private cdr: ChangeDetectorRef,
-    private employeeService: EmployeeService,
-    private router: Router) { }
+    private supportService: SupportService,
+    private customersService:CustomersService,
+    private router: Router,
+    private supportersQuery: SupportersQuery,
+    private customersQuery: CustomersQuery  )
+  { super(); }
 
   @ViewChild('searchInput') searchInput: ElementRef;
   @Input('roleSearch') roleSearch: string;
-  clicks$ = fromEvent(document, 'click');
-  destroy$: Subject<boolean> = new Subject<boolean>();
-  isLoading = false;
-  hide = true;
-  users: BaseUser[] = [];
-  supporterName: string;
-  supporter$: Observable<Supporter>;
+  hide = false;
+  users$: Observable<BaseUser[]> ;
+
 
   ngOnInit(): void
   {
-    this.employeeService.searchUserList
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(
-        (usersResult: BaseUser[]) =>
-        {
-          if (usersResult.length > 0) {
-            this.users = usersResult;
-          }
-          this.hide = false;         
-        });
+    if (this.roleSearch == environment.roles.supporter) {
+      this.users$ = this.supportService.searchUsers$;
+      this.checkIfSuportersLoaded();
+    }
+    else if (this.roleSearch == environment.roles.customer) {
+      this.users$ = this.customersService.searchUsers$;
+      this.checkIfCustomersLoaded();
+    }
 
-    this.employeeService.supporter$.pipe(
-      filter(supporter => supporter != null),
-      takeUntil(this.destroy$)).    
-      subscribe(supporter => this.supporterName = supporter.name)        
+  }
+  checkIfSuportersLoaded()
+  {
+    this.supportersQuery.selectedIsAllLoaded$.pipe(
+      filter(isLoaded => { return !isLoaded }),
+      switchMap(() =>
+      {
+        return this.supportService.getAll();
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
+  }
+
+  checkIfCustomersLoaded()
+  {
+    this.customersQuery.selectedIsAllLoaded$.pipe(
+      filter(isLoaded => { return !isLoaded }),
+      switchMap(() =>
+      {
+        return this.customersService.getAll();
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe();
   }
 
   ngAfterViewInit()
   {
-    this.clicks$.pipe(
-      takeUntil(this.destroy$),
+    this.subscribeToggleDisplay();
+    this.subscribeKeyupOnInput();
+  }
+
+  subscribeKeyupOnInput()
+  {
+    fromEvent<any>(
+      this.searchInput.nativeElement,
+      'keyup'
+    ).pipe(
+      map((event) => event.target.value),
+      takeUntil(this.destroy$))
+      .subscribe(
+        searchInput =>
+        {
+          if (this.roleSearch == environment.roles.supporter) {
+            this.supportService.queryTypeAheadSupporters(searchInput);
+          } else {
+            this.customersService.queryTypeAheadUsers(searchInput);
+          }
+          this.hide = false;
+        });
+  }
+
+  subscribeToggleDisplay()
+  {
+    fromEvent(document, 'click').pipe(
       map((event: any) =>
       {
         return (event.target.id !== 'resultList' && event.target.id !== 'searchInput') ? true : false;
-      }))
+      }),
+      takeUntil(this.destroy$))
       .subscribe((shouldHideResultList: boolean) =>
       {
         this.hide = shouldHideResultList;
         this.cdr.markForCheck();
       });
-
-    fromEvent<any>(
-      this.searchInput.nativeElement,
-      'keyup'
-    ).pipe(
-      takeUntil(this.destroy$),
-      tap(() =>
-      {
-        this.isLoading = true;
-        this.users = [];
-        this.cdr.detectChanges();
-      }),
-      map((event) => event.target.value),
-      debounceTime(400),
-      distinctUntilChanged(),
-      switchMap(searchInput =>
-      {
-        return this.employeeService.getTypeAheadUsers(this.roleSearch, searchInput);
-      })).
-      subscribe(() =>
-      {
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      });
   }
 
   onSelectUser(id: string)
   {
-    this.isLoading = true;
-    this.cdr.markForCheck();
     if (this.roleSearch == environment.roles.customer) {
-      this.ticketService.getAllTicketsByUserId(id);
-        this.isLoading = false;
-    } else if (this.roleSearch == environment.roles.supporter) {
-      this.employeeService.getEmployeeById(id).pipe(
-        takeUntil(this.destroy$))
-        .subscribe(() =>      
-        {
-          this.isLoading = false;
-          this.router.navigate(['admin/supporters', this.supporterName]);
-        }
-      );
+      this.ticketService.typeAheadFilterByCustomer(id);   
+    }
+    else if (this.roleSearch == environment.roles.supporter) {
+      const supporterName = this.supportService.querySupporterById(id).name;
+      this.router.navigate(['admin/supporters', supporterName]);
     }
   }
 
-  ngOnDestroy()
-  {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
-  }
 }

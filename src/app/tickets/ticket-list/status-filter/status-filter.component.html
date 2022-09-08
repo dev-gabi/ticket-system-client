@@ -1,0 +1,15 @@
+<div class="d-block mx-auto">
+  <div class="row w-100 mobile-only">
+    <h3 class="center-text col-6 p-0 inline-flex">Filter by status: </h3>
+    <div class="col-5 inline-flex">
+      <select class=" search-ul p-0 center-text mb-0">
+        <option *ngFor="let status of statusOpt" (click)="onSelectStatus(status)">{{status}}</option>
+      </select>
+    </div>
+  </div>
+
+  <select class="desktop-only search-ul p-0 center-text mb-0">
+    <option *ngFor="let status of statusOpt" (click)="onSelectStatus(status)">{{status}}</option>
+  </select>
+
+</div>

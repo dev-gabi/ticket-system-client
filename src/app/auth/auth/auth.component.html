@@ -7,12 +7,15 @@
     <form #f="ngForm" (ngSubmit)="onLogin(f.value)" class="m-5 text-large text-center col-md-10 row">
       <div class="col-md-12 row mb-2">
         <div class="col-md-4">
-          <app-td-form-label-validation [inputName]="email"></app-td-form-label-validation>
+          <span *ngIf="email.touched" [labelValidation]="email.valid"></span>
           <label>Email:</label>
         </div>
 
         <div class="col-md-8">
-          <input type="text" ngModel name="email" #email="ngModel" required email class="mx-auto d-block box-field" />
+
+          <input type="email" ngModel name="email" #email="ngModel"
+                 required email class="mx-auto d-block box-field" />
+        
           <span *ngIf="!email.valid && email.touched" class="danger mx-auto d-block box-field">
             <span *ngIf="email.errors.required">Please fill in your email</span>
             <span *ngIf="email.errors.email">Please enter a valid email</span>
@@ -22,7 +25,7 @@
       <br />
       <div class="col-md-12 row mb-2">
         <div class="col-md-4">
-          <app-td-form-label-validation [inputName]="password"></app-td-form-label-validation>
+          <span *ngIf="password.touched" [labelValidation]="password.valid"  ></span>
           <label>Password:</label>
         </div>
 
@@ -37,7 +40,7 @@
       <div class="col-md-12 row">
         <div class="col-md-4">&nbsp;</div>
         <div class="col-md-8">
-          <button type="submit" class="button d-block mx-auto w-75" [disabled]="!f.valid" [allowSubmit]="f.valid">Login</button>
+          <button type="submit" class="button d-block mx-auto w-75" [disabled]="f.invalid" [allowSubmit]="f.valid">Login</button>
         </div>
       </div>
     </form>
@@ -62,4 +65,3 @@
 <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 <app-registered-users></app-registered-users>
 <app-alert *ngIf="errorMessage!=null" [message]="errorMessage" (close)="onHandleError()"></app-alert>
-

@@ -8,10 +8,10 @@
         <div class="col-md-4"><b>User Name</b></div>
         <div class="col-md-4"><b>Error Details</b></div>
       </div>
-      <ng-template #loading>
-        <app-loading-spinner></app-loading-spinner>
-      </ng-template>
-      <div class="card-body col-md-12" *ngIf="errors$ | async as errors; else loading;">
+
+        <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+
+      <div class="card-body col-md-12" *ngIf="errorLogs$ | async as errorLogs;">
 
         <ng-container *ngIf="errorsPage$ | async as errorsPage">
             <div *ngFor="let error of errorsPage" class="border-bottom row">
@@ -23,7 +23,7 @@
         </ng-container>
 
         <div class="card-footer pb-0 pt-3">
-          <jw-pagination [items$]="errors$" (changePage)="onChangePage($event)" [pageSize]="10"></jw-pagination>
+          <jw-pagination [items$]="errorLogs$" (changePage)="onChangePage($event)" [pageSize]="10"></jw-pagination>
         </div>
 
         <ng-template #noResults>
@@ -33,3 +33,4 @@
     </div>
   </div>
 </div>
+<app-alert *ngIf="(requestError$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

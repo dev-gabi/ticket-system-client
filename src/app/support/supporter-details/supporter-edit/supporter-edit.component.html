@@ -1,0 +1,55 @@
+<div class="container c-component no-opacity fade-in col-md-10 p-2 Ingredient" *ngIf="supporter">
+  <h3>Edit Details</h3>
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value)">
+    <div class="form-group m-2 row">
+      <div class="col-md-3">
+
+        <span *ngIf="name.touched" [labelValidation]="name.valid"></span>
+        <label for="name">Name:</label>
+      </div>
+      <div class="col-md-9">
+      <input type="text" class="border-bottom w-100" name="name" required minlength=2 [ngModel]="supporter.name" #name="ngModel" />
+        <br/>
+        <span *ngIf="name.invalid" class="danger d-block w-100">
+          <span *ngIf="name.errors?.minlength">Name should be longer than 1 character</span>
+          <span *ngIf="name.errors?.required">Please fill in your name</span>
+        </span>
+      </div>
+    </div>
+    <div class="form-group m-2 row">
+      <div class="col-md-3">
+
+        <span *ngIf="email.touched" [labelValidation]="email.valid"></span>
+        <label for="email">Email:</label>
+      </div>
+      <div class="col-md-9">
+      <input type="text" class="border-bottom w-100" name="email" [ngModel]="supporter.email" #email="ngModel" required email/>
+      <span *ngIf="email.invalid" class="danger d-block w-100">
+        <span *ngIf="email.errors?.email">Please enter a valid email</span>
+        <span *ngIf="email.errors?.required">Please fill in your email</span>
+      </span>
+      </div>
+
+    </div>
+    <div class="form-group m-2 row">
+      <div class="col-md-3">
+        <label for="adress">Active status:</label>
+      </div>
+      <div class="col-md-9">
+        <input type="checkbox" class="border-bottom d-inline-block" name="isActive" [ngModel]="supporter.isActive" #isActive="ngModel"/><br />
+      </div>
+    </div>
+
+
+    <div class="col-md-12 row">
+      <div class="col-md-6">
+        <button type="submit" class="button d-inline-block  ml-2" [disabled]="f.invalid" [allowSubmit]="f.valid">Save</button>
+      </div>
+      <div class="col-md-6">
+        <button class="button d-inline-block bg-danger" (click)="onCancelEdit()" type="button">Cancel</button>
+      </div>
+    </div>
+  </form>
+</div>
+<app-confirm-dialog *ngIf="isConfirmDialogOpen" [question]="'Cancel changes for this user?'" (isConfirmed)="onConfirm($event)"></app-confirm-dialog>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

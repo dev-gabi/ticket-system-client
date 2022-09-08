@@ -1,44 +1,24 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { environment } from '../../../environments/environment';
 import { catchError, tap } from 'rxjs/operators';
-import { BehaviorSubject, of, Subject, throwError } from 'rxjs';
-import { ErrorModel } from './error-log/error.model';
-import { AuthLog } from './auth-log/auth-log.model';
+import { BaseService } from '../../utils/base-service';
+import { AuthLogStore } from './auth-log/store/auth-log.store';
+import { ErrorLogStore } from './error-log/store/error-log.store';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class LogService {
+export class LogService extends BaseService
+{
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { super(); }
 
-  private errorLogSubject = new BehaviorSubject<ErrorModel[]>(null);
-  private authLogSubject = new BehaviorSubject<AuthLog[]>(null);
-  authLogs$ = this.authLogSubject.asObservable();
-  errorLogs$ = this.errorLogSubject.asObservable();
-
-  fetchErrorLogs()
+  fetchLogs<logType>(endpoint: string, store: AuthLogStore | ErrorLogStore)
   {
-    this.http.get<ErrorModel[]>(environment.endpoints.logs.getErrorLogs).pipe(
-      catchError((response: HttpErrorResponse) =>
-      {
-        return throwError(response.error);
-      }),
-      tap(errors => this.errorLogSubject.next(errors))
-    ).subscribe();
-  }
-  fetchAuthLogs()
-  {
-
-    this.http.get<AuthLog[]>(environment.endpoints.logs.getAuthLogs).pipe(
-      catchError((response: HttpErrorResponse) =>
-      {
-        return throwError(response.error);
-      }),
-      tap(logs =>  this.authLogSubject.next(logs) )
-    ).subscribe();
-  }
+    return this.http.get<logType[]>(endpoint).pipe(
+      catchError(this.handleHttpError),
+      tap(logs => store.setObjects(logs))
+    );
+}
 }

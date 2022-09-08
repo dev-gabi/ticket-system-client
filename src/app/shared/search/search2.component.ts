@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../auth/auth.service';
@@ -18,28 +17,23 @@ export class Search2Component implements  OnInit
   @Input('isAdminDash') isAdminDash = false;
   @Output('filteredTickets') filteredTickets = new EventEmitter<Observable<Ticket[]>>();
 
-  selectedUserSub: Subscription;
-  subscriptions: Subscription[] = [];
   contentSearchType = "content";
   userSearchType = "user";
   isUserSearch: boolean;
   selectedSearchType = this.contentSearchType;
   isCustomer: boolean;
 
-
-
   ngOnInit(): void
   {
-
-    this.setRole();
+    this.getRole();
     if (this.isAdminDash) {
       this.selectedSearchType = this.userSearchType;
       this.isUserSearch = true;
     }
   }
-  setRole()
+  getRole()
   {
-    const role = this.authService.user.value.role;
+    const role = this.authService.getLoggedInUser().role;
     role == environment.roles.customer ? this.isCustomer = true : this.isCustomer = false;
   }
 
@@ -52,11 +46,6 @@ export class Search2Component implements  OnInit
       case this.userSearchType:
         this.isUserSearch = true;
     }
-  }
-
-  ngOnDestroy()
-  {
-    this.subscriptions.forEach(s => { if (s) { s.unsubscribe() } })
   }
 
 }

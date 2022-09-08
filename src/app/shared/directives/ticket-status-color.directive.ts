@@ -1,4 +1,5 @@
 import { Directive, ElementRef, Input, OnInit, Renderer2 } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
 @Directive({
   selector: '[statusColor]'
@@ -19,10 +20,10 @@ export class TicketStatusColorDirective implements OnInit
   setColor()
   {
     switch (this.statusColor) {
-      case 'open':
+      case environment.ticketStatus.open:
         this.renderer.setStyle(this.elementRef.nativeElement, 'color', '#34e084');
         break;
-      case 'closed':
+      case environment.ticketStatus.closed:
         this.renderer.setStyle(this.elementRef.nativeElement, 'color', '#ed4040');
         break;
     }

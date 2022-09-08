@@ -5,10 +5,13 @@
 export const environment = {
   production: false,
   ticketStatus: {
-    open: 'open',
-    closed: 'closed'
+    open: 'Open',
+    closed: 'Closed',
+    all:'All'
   },
-
+  typeAhead: {
+    resultNumDisplay: 2
+  },
   roles: {
     admin: 'Admin',
     supporter: 'Supporter',
@@ -28,27 +31,25 @@ export const environment = {
       "validateRegistrationToken": "https://localhost:44388/api/auth/validate-registration-token"
     },
     "customers": {
-      "getById": "https://localhost:44388/api/customers/",
-      "put": "https://localhost:44388/api/customers/put/",
+      "all": "https://localhost:44388/api/customers/all",
+      "single": "https://localhost:44388/api/customers/",
+
     },
-    "employees": {
-      "getAllSupporters": "https://localhost:44388/api/employees/get-supporters",
+    "supporters": {
+      "getAll": "https://localhost:44388/api/employees/get-supporters",
       "searchUsers": "https://localhost:44388/api/employees/search-users",
-      "getEmployeeById": "https://localhost:44388/api/employees/get-by-id",    
+      "getSupporterById": "https://localhost:44388/api/employees/get-by-id",    
       "editSupporter": "https://localhost:44388/api/employees/edit-supporter",
       "getTopClosingTicketsStats": "https://localhost:44388/api/employees/get-top-closing-tickets-stats",
       "getGeneralMontlyStats": "https://localhost:44388/api/employees/get-general-monthly-stats"
     },
     "tickets": {
-      "getAll": "https://localhost:44388/api/tickets/get-all",
-      "getOpenTickets": "https://localhost:44388/api/tickets/get-open-tickets",
-      "getAllByUserId": "https://localhost:44388/api/tickets/get-all-by-user-id",
-      "getOpenTicketsByUserId": "https://localhost:44388/api/tickets/get-open-tickets-by-user-id",
+      "getTickets": "https://localhost:44388/api/tickets/get-tickets",
+      "getByUserId":"https://localhost:44388/api/tickets/get-by-user-id",
       "close": "https://localhost:44388/api/tickets/close",
       "addReply": "https://localhost:44388/api/tickets/add-reply",
       "create": "https://localhost:44388/api/tickets/create",
       "getCategories": "https://localhost:44388/api/tickets/get-categories",
-      "typeAheadSearch": "https://localhost:44388/api/tickets/type-ahead-search",
       "seedTickets": "https://localhost:44388/api/seed/tickets",
     },
     "logs": {

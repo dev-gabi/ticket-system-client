@@ -6,12 +6,19 @@
          routerLinkActive="active"
          routerLink="/customers/tickets/new"
          class="d-inline-block text-center">+Open a new ticket</a>
-      <button (click)="onDisplayAllTickets()" class="button-secondary font-weight-bold rounded">Display All</button>
-      <button (click)="onDisplayOpenTickets()" class="button-secondary font-weight-bold rounded">Display Open</button>
+      <button (click)="reFetchTickets()" class="button-secondary font-weight-bold rounded">Refetch Tickets</button>
 
       <div *ngIf="(tickets$ | async)?.length > 0; else nothingFound" class="card-body">
         <h2 class="text-center mb-5">Ticket List</h2>
-
+        <div class="row desktop-only">
+          <div class="col-md-9"> </div>
+          <div class="col-md-2">
+            <app-category-filter (category)="onQueryByCategory($event)"></app-category-filter>
+          </div>
+          <div class="col-md-1 p-0">
+            <app-status-filter (status)="onQueryByStatus($event)"></app-status-filter>
+          </div>
+        </div>
         <ng-container *ngIf="pageOfTickets$ | async as pageOfTickets">
           <div *ngFor="let ticket of pageOfTickets" class="border-bottom row">
             <div class="col-md-3 p-2 row">
@@ -39,16 +46,16 @@
         <h3>No results.</h3>
       </ng-template>
       <div class="col-md-12 row">
-
-        <div class="col-md-6">
-          <app-category-filter (category)="onFilterByCategory($event)"></app-category-filter>
-        </div>
-
-        <div class="col-md-6">
+        <div class="col-md-6 mx-auto">
           <app-search [roleTypeSearch]=customerRole></app-search>
         </div>
+        <div class="col-md-12 mobile-only">
+          <app-category-filter (category)="onQueryByCategory($event)"></app-category-filter>
+        </div>
+        <div class="col-md-12 mobile-only">
+          <app-status-filter (status)="onQueryByStatus($event)"></app-status-filter>
+        </div>
       </div>
-
     </div>
 
     <div class="col-md-6 p-0">
@@ -57,3 +64,4 @@
   </div>
 
 </div>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

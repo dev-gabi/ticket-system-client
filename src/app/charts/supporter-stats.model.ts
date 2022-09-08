@@ -1,8 +1,6 @@
-export class SupporterStats
+export interface SupporterStats
 {
-  constructor(
-    public name: string,
-    public ticketsClosed: number,
-    public replies: number
-  ) { }
+  name: string;
+  ticketsClosed: number;
+  replies: number;
 }

@@ -1,5 +1,7 @@
-export class BaseUser
+export interface BaseUser
 {
-  constructor(public id: string, public name: string, public role: string,  public isActive: boolean) { }
-
+  id: string;
+  name: string;
+  role: string;
+  isActive: boolean;
 }

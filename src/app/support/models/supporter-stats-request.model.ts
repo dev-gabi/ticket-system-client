@@ -1,8 +1,4 @@
-
-export class SupporterStatsRequest
-{
-  constructor(
-    public id: string,
-    public date: Date
-  ) { }
+export interface SupporterStatsRequest{
+  id: string;
+  date: Date;
 }

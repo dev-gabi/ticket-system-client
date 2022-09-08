@@ -4,16 +4,20 @@
   border-color:black;
   border-style:solid;
 }
-
+.invalid-circle, .success {
+  width: 20px;
+  height: 20px;
+  line-height:20px;
+  display: inline-block;
+}
 .invalid-circle {
   border-radius: 50%;
-  width: 15px;
-  height: 15px;
-  display: inline-block;
 }
 
 .success {
+  font-size: 14px;
   background-color: #34e084;
+  text-align:center;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {

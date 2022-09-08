@@ -1,0 +1,51 @@
+<form  #registerForm="ngForm" (ngSubmit)="onEmployeePreRegister(registerForm.value)" class="m-5 text-center col-md-10">
+  <h3 class="text-center">Pre Register an employee</h3>
+  <div class="row col-md-10">
+    <div class="col-md-5">
+      <span *ngIf="uName.touched" [labelValidation]="uName.valid"></span> 
+      <label>User name:</label>
+    </div>
+    <div class="col-md-7 d-block">
+      <input type="text" ngModel name="userName" #uName="ngModel" required minlength="2" class="mx-auto d-block box-field" />
+      <span *ngIf="!uName.valid && uName.touched" class="danger mx-auto d-block box-field">
+        <span *ngIf="uName.errors.required">User name is required</span>
+        <span *ngIf="uName.value.length<2">User name must be at least 2 characthers</span>
+      </span>
+    </div>
+  </div>
+  <br />
+  <div class="row col-md-10">
+    <div class="col-md-5">
+      <span *ngIf="personalEmail.touched" [labelValidation]="personalEmail.valid"></span>
+      <label>Personal email:</label>
+    </div>
+    <div class="col-md-7 d-block">
+      <input type="email" ngModel name="personalEmail" #personalEmail="ngModel" required email minlength="2" class="mx-auto d-block box-field input" />
+      <span *ngIf="!personalEmail.valid && personalEmail.touched" class="danger mx-auto d-block box-field">
+        <span *ngIf="personalEmail.errors.required">Email is requierd</span>
+        <span *ngIf="personalEmail.errors.email">Email is not valid</span>
+      </span>
+    </div>
+  </div>
+  <br />
+  <div class="row col-md-10">
+    <div class="col-md-5">
+      <span *ngIf="role.touched" [labelValidation]="role.valid"></span>
+      <label>Role:</label>
+    </div>
+    <div class="col-md-7 d-block">
+      <select ngModel name="role" #role="ngModel" required class="mx-auto d-block box-field">
+        <option *ngFor="let role of employeeRoles" [ngValue]="role">{{role}}</option>
+      </select>
+      <span *ngIf="!role.valid && role.touched" class="danger mx-auto d-block box-field">
+        <span *ngIf="role.errors.required">Role is requierd</span>
+      </span>
+    </div>
+  </div>   <br />
+  *The Token will be valid for 1 hour.<br />
+  <button type="submit" class="button d-block mx-auto" [disabled]="!registerForm.valid" [allowSubmit]="registerForm.valid">Register</button>
+</form>
+
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>
+<app-alert *ngIf="message" [message]="message" (close)="message = null"></app-alert>

@@ -1,23 +1,26 @@
-<h1 class='text-center m4'>Resend email confirmation</h1>
-<div class='text-center h3'>
-  <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" class="m-5 Ingredient text-center col-md-10">
-    <div class="col-md-8 row mb-2 mx-auto">
-      <div class="col-md-4">
-        <app-td-form-label-validation [inputName]="email"></app-td-form-label-validation>
-        <label>Email:</label>
-      </div>
+<div class="d-block mx-auto box mt-5 rounded bg-light border border-dark b-shadow">
+  <h1 class='text-center m4'>Resend email confirmation</h1>
+  <div class='text-center h3'>
+    <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" class="m-5 Ingredient text-center col-md-10">
+      <div class="col-md-8 row mb-2 mx-auto">
+        <div class="col-md-4">
+          <span touched="email.touched" [labelValidation]="email.valid" ></span>
+          <label>Email:</label>
+        </div>
 
-      <div class="col-md-8">
-        <input type="text" ngModel name="email" #email="ngModel" required email class="mx-auto d-block box-field" />
-        <span *ngIf="!email.valid && email.touched" class="danger mx-auto d-block box-field">
-          <span *ngIf="email.errors.required">Please fill in your email</span>
-          <span *ngIf="email.errors.email">Please enter a valid email</span>
-        </span>
+        <div class="col-md-8">
+          <input type="email" ngModel name="email" #email="ngModel" required email class="mx-auto d-block box-field" />
+          <span *ngIf="!email.valid && email.touched" class="danger mx-auto d-block box-field">
+            <span *ngIf="email.errors.required">Please fill in your email</span>
+            <span *ngIf="email.errors.email">Please enter a valid email</span>
+          </span>
+        </div>
       </div>
-    </div>
-    <button type="submit" class="button d-block mx-auto text-large w-50" [disabled]="!f.valid" [allowSubmit]="f.valid">Resend email</button>
-  </form>
+      <button type="submit" class="button d-block mx-auto text-large w-50" [disabled]="!f.valid" [allowSubmit]="f.valid">Resend email</button>
+    </form>
+  </div>
 </div>
 
-<app-alert *ngIf="message!=null" [message]="message" (close)="message = null"></app-alert>
-<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
+  <app-alert *ngIf="message!=null" [message]="message" (close)="message = null"></app-alert>
+  <app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>
+  <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

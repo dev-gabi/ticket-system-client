@@ -7,14 +7,14 @@
     <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" class="m-5 text-large text-center col-md-10">
       <div class="col-md-8 row mb-2 mx-auto">
         <div class="col-md-4">
-          <app-td-form-label-validation [inputName]="email"></app-td-form-label-validation>
+          <span *ngIf="email.touched" [labelValidation]="email.valid"></span>
           <label>Personal Email:</label>
         </div>
 
         <div class="col-md-8">
           <input type="text" ngModel name="email" #email="ngModel" required email class="mx-auto d-block box-field" />
           <span *ngIf="!email.valid && email.touched" class="danger mx-auto d-block box-field">
-            <span *ngIf="email.errors.required">Please the email</span>
+            <span *ngIf="email.errors.required">Please enter an email</span>
             <span *ngIf="email.errors.email">Please enter a valid email</span>
           </span>
         </div>
@@ -25,4 +25,5 @@
   <app-loading-spinner *ngIf="isLoading"></app-loading-spinner>
 </div>
 <app-alert *ngIf="message!=null" [message]="message" (close)="message = null"></app-alert>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>
 

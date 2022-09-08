@@ -1,6 +1,12 @@
 import { TicketReply } from '../ticket-reply.model';
 import { Ticket } from '../ticket.model';
 
+export interface TicketResponse extends Ticket
+{
+  customerName: string;
+ // error: string;
+}
+/*
 export class TicketResponse extends Ticket
 {
   constructor(
@@ -20,3 +26,4 @@ export class TicketResponse extends Ticket
     super(id, customerId, category, title, replies, status, openDate, closingDate, closedByUser)
   }
 }
+*/

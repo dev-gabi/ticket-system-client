@@ -1,10 +1,8 @@
-export class AuthLog
+export interface AuthLog
 {
-  constructor(
-
-    public userName: string,
-    public date: Date,
-    public details: string,
-    public action: string
-  ) { }
+  id: number;
+  userName: string;
+   date: Date;
+   details: string;
+   action: string;
 }

@@ -1,27 +1,29 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { DestroyPolicy } from '../../../../utils/destroy-policy';
 
 @Component({
   selector: 'app-register-result',
-  templateUrl: 'register-result.component.html'
+  templateUrl: 'register-result.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RegisterResultComponent implements OnInit, OnDestroy
+export class RegisterResultComponent extends DestroyPolicy implements OnInit
 {
+  constructor(private route: ActivatedRoute, private router: Router, private cdr: ChangeDetectorRef) { super(); }
 
-  parasSub: Subscription;
   isError = false;
   errorMessage: string;
   ngOnInit(): void
   {
-    this.parasSub = this.route.queryParams.subscribe(
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(
       params =>
       {
         if (params["message"] != null) {
           this.isError = true;
           this.errorMessage = params["message"];
-        }
-        
+          this.cdr.markForCheck();
+        }      
       }
     );
   }
@@ -29,9 +31,5 @@ export class RegisterResultComponent implements OnInit, OnDestroy
   {
     this.router.navigate(['/auth/register/resend-email']);
   }
-  constructor(private route: ActivatedRoute, private router: Router) { }
-  ngOnDestroy(): void
-  {
-    this.parasSub.unsubscribe();
-  }
+
 }

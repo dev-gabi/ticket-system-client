@@ -1,39 +1,49 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { finalize, takeUntil } from 'rxjs/operators';
+import { DestroyPolicy } from '../../../utils/destroy-policy';
 import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-forgot-password',
-  templateUrl: './forgot-password.component.html'
+  templateUrl: './forgot-password.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ForgotPasswordComponent {
+export class ForgotPasswordComponent extends DestroyPolicy
+{
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private cdr: ChangeDetectorRef) { super(); }
   message: string ;
   isLoading = false;
+  error$ = this.authService.error$;
   @ViewChild('f') form: NgForm;
+
   onSubmit(email: string)
   {
     this.isLoading = true;
-    this.authService.forgotPassword(email).subscribe(
+    this.authService.forgotPassword(email).pipe(
+      finalize(() =>
+      {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(
       response =>
       {
-        if (response.isSuccess) {
           this.message = response.message;
-        } else {
-          this.message = response.errors.toString()  ;
-        }
-        this.isLoading = false;
-      },
-      error =>
-      {
-        this.isLoading = false;
-        this.message = error
-      });
+      }
+    );
   }
   onConfirm()
   {
     this.message = null;
     this.form.reset();
+    this.cdr.markForCheck();
+  }
+
+  onCloseAlert()
+  {
+    this.authService.clearError();
   }
 }

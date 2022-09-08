@@ -1,12 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { delay, takeUntil } from 'rxjs/operators';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Observable } from 'rxjs';
+import { switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
+import { CanFormDeactivate } from '../../auth/guards/form-deactivate.guard';
+import { DestroyPolicy } from '../../utils/destroy-policy';
 import { Ticket } from '../models/ticket.model';
-import { TicketService2 } from '../ticket.service2';
+import { TicketService3 } from '../ticket.service3';
 
 
 @Component({
@@ -14,82 +16,66 @@ import { TicketService2 } from '../ticket.service2';
   templateUrl: './ticket.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TicketComponent implements OnDestroy, OnInit
+export class TicketComponent extends DestroyPolicy implements OnInit
 {
-  constructor(private ticketService2: TicketService2, private route: ActivatedRoute,
-     private authService: AuthService, private cdr: ChangeDetectorRef) { }
+  constructor(private ticketService: TicketService3, private route: ActivatedRoute,
+    private authService: AuthService) { super();}
 
   ticket$: Observable<Ticket>;
+  error$: Observable<string>;
   ticketId: number;
-  destroy$: Subject<boolean> = new Subject<boolean>();
   open = environment.ticketStatus.open;
   closed = environment.ticketStatus.closed;
   isCustomer: boolean;
   imageFile: File;
-  responseMessage: string = null;
-
-
   @ViewChild('addReplyForm') addReplyForm: NgForm;
   confirmCloseTicket = false;
-  confirmQuestion = "Are you sure you want to close this ticket?";
+
+
   ngOnInit(): void
   {
-   
-    this.isCustomer = this.authService.user.value.role === environment.roles.customer;
-    this.route.params.pipe(takeUntil(this.destroy$)).subscribe(
-      (params: Params) =>
+    this.isCustomer = this.authService.getLoggedInUser().role === environment.roles.customer;
+
+    this.ticket$ = this.route.params.pipe(    
+      switchMap((params: Params) =>
       {
         this.ticketId = +params['id'];
-        this.ticket$ = this.ticketService2.getSelectedTicket(this.ticketId);
-        this.cdr.markForCheck();
-   
-      }
-    )
-
-    this.ticketService2.error$.pipe(takeUntil(this.destroy$)).subscribe(
-      error =>
-      {
-        this.responseMessage = error;
-        this.cdr.markForCheck();
-      }
-    )
+        return this.ticketService.setActiveTicket(this.ticketId);
+      }),
+      takeUntil(this.destroy$)
+    );
+    this.error$ = this.ticketService.error$;
   }
 
   onAddReply(formData: { reply: string, innerReplyChecked: boolean })
   {
     let isInnerReply;
-    formData.innerReplyChecked ? isInnerReply = true:  isInnerReply = false;
-    this.ticket$ = this.ticketService2.addReply(this.ticketId, formData.reply, isInnerReply, this.imageFile);
-    //this.imageFile = null;
-   // this.addReplyForm.reset();
+    formData.innerReplyChecked ? isInnerReply = true : isInnerReply = false;
+    this.ticketService.addReply(this.ticketId, formData.reply, isInnerReply, this.imageFile).pipe(
+      takeUntil(this.destroy$),
+    ).subscribe();
+    this.imageFile = null;
+    this.addReplyForm.reset(); 
   }
   setFile(fileOutput: File)
   {
     this.imageFile = fileOutput;
   }
-  onCloseTicket()
-  {
-    this.confirmCloseTicket = true;
-  }
-  onCloseConfirm()
-  {
-    this.confirmCloseTicket = false;
-  }
+
   onCloseAlert()
   {
-    this.responseMessage = null;
+    this.ticketService.clearError();
   }
-  onConfirm()
+  onConfirm(isConfirmed: boolean)
   {
-    this.ticket$ = this.ticketService2.closeTicket(this.ticketId);
+    if (isConfirmed) {
+      this.ticketService.closeTicket(this.ticketId).pipe(
+        takeUntil(this.destroy$))
+        .subscribe();
+    
+      this.ticketService.filterByStatus(environment.ticketStatus.open);
+    //  this.router.navigate(["../"], { relativeTo: this.route }); //causes exception
+    }
     this.confirmCloseTicket = false;
-  //  this.router.navigate(["../"], { relativeTo: this.route }); //causes exception 
-  }
-
-  ngOnDestroy()
-  {
-
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
   }
 }

@@ -1,11 +1,9 @@
-export class CustomerRegisterModel
+export interface CustomerRegisterModel
 {
-  constructor(
-    public userName: string,
-    public email: string,
-    public password: string,
-    public confirmPassword: string,
-    public phoneNumber: string,
-    public address: string)
-  {  }
+     userName: string;
+     email: string;
+     password: string;
+     confirmPassword: string;
+     phoneNumber: string;
+  address: string;
 }

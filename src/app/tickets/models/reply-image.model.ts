@@ -1,7 +1,14 @@
-export class ReplyImage
+export interface ReplyImage
 {
-  constructor(
-/*    public id: number,*/
-    public replyId: number,
-    public path: string) { }
+  replyId: number,
+  path: string
 }
+
+
+
+////export class ReplyImage
+////{
+////  constructor(
+////    public replyId: number,
+////    public path: string) { }
+////}

@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Helpers } from 'src/app/helpers';
+import { Helpers } from 'src/app/utils/helpers';
 import {
   ApexNonAxisChartSeries,
   ApexPlotOptions,

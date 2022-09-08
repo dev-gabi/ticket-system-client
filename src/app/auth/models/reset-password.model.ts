@@ -1,9 +1,7 @@
-export class ResetPassword
+export interface ResetPassword
 {
-  constructor(
-    public newPassword: string,
-    public confirmPassword: string,
-    public userId: string,
-    public resetToken:string
-  ) { }
+  newPassword: string;
+  confirmPassword: string;
+  userId: string;
+  resetToken: string;
 }

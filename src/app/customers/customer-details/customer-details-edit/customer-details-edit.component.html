@@ -1,68 +1,66 @@
 <div class="container c-component no-opacity fade-in col-md-6 p-2 text-large">
   <h3>Edit Details</h3>
-  <form [formGroup]="editForm" (ngSubmit)="onSubmit()" *ngIf="editForm">
+  <form #f="ngForm" (ngSubmit)="onSubmit(f.value)" *ngIf="customerEdit$ | async as customerEdit">
     <div class="form-group m-2 row">
       <div class="col-md-3">
-        <app-label-validation [form]="editForm" [inputName]="'name'"></app-label-validation>
+        <span *ngIf="name.touched" [labelValidation]="name.valid"></span>
         <label for="name">Name:</label>
       </div>
       <div class="col-md-9">
-        <input type="text" class="border-bottom w-100" formControlName="name" required />
-        <br />
-        <span *ngIf="editForm.get('name').invalid" class="danger d-block w-100">
-          <span *ngIf="editForm.get('name').errors.minlength">Name should be longer than 1 character</span>
-          <span *ngIf="editForm.get('name').errors.required">Please fill in your email</span>
+        <input type="text" class="border-bottom w-100" name="name" required minlength=2 [ngModel]="customerEdit.name" #name="ngModel"/>
+
+        <span *ngIf="name.invalid" class="danger d-block w-100">
+          <span *ngIf="name.errors?.minlength">Name should be longer than 1 character</span>
+          <span *ngIf="name.errors?.required">Please fill in your name</span>
         </span>
       </div>
     </div>
     <div class="form-group m-2 row">
       <div class="col-md-3">
-        <app-label-validation [form]="editForm" [inputName]="'email'"></app-label-validation>
+        <span *ngIf="email.touched" [labelValidation]="email.valid"></span>
         <label for="email">Email:</label>
       </div>
-      <div class="col-md-9">
-        <input type="text" class="border-bottom w-100" formControlName="email" required />
-        <br />
-        <span *ngIf="editForm.get('email').invalid" class="danger d-block w-100">
-          <span *ngIf="editForm.get('email').errors.email">Please enter a valid email</span>
-          <span *ngIf="editForm.get('email').errors.required">Please fill in your name</span>
-        </span>
-      </div>
-
-
-
+    <div class="col-md-9">
+      <input type="text" class="border-bottom w-100" name="email" [ngModel]="customerEdit.email" #email="ngModel" required email/>
+      <span *ngIf="email.invalid" class="danger d-block w-100">
+        <span *ngIf="email.errors?.email">Please enter a valid email</span>
+        <span *ngIf="email.errors?.required">Please fill in your email</span>
+      </span>
     </div>
+  </div>
+
+
     <div class="form-group m-2 row">
       <div class="col-md-3">
-        <app-label-validation [form]="editForm" [inputName]="'address'"></app-label-validation>
+        <span *ngIf="address.touched" [labelValidation]="address.valid" ></span>
         <label for="address">Address:</label>
       </div>
-      <div class="col-md-9">
-        <input type="text" class="border-bottom d-inline-block w-100" formControlName="address" /><br />
-        <span *ngIf="editForm.get('address').invalid" class="danger d-block w-100">
-          <span *ngIf="editForm.get('address').errors.required">Please fill in an  adress</span>
+    <div class="col-md-9">
+        <input type="text" class="border-bottom d-inline-block w-100" name="address" #address="ngModel" [ngModel]="customerEdit.address" required/><br />
+        <span *ngIf="address.invalid" class="danger d-block w-100">
+          <span *ngIf="address.errors?.required">Please fill in an  adress</span>
         </span>
       </div>
     </div>
     <div class="form-group m-2 row">
       <div class="col-md-3">
-        <app-label-validation [form]="editForm" [inputName]="'phoneNumber'"></app-label-validation>
+        <span *ngIf="phone.touched" [labelValidation]="phone.valid"></span>
         <label for="phoneNumber">Phone:</label>
       </div>
       <div class="col-md-9">
-        <input type="text" class="border-bottom w-100" formControlName="phoneNumber" />
-        <br />
-        <span *ngIf="editForm.get('phoneNumber').invalid" class="danger w-100 d-block">
-          <span *ngIf="editForm.get('phoneNumber').errors.required">Please fill in your number</span>
+        <input type="text" class="border-bottom w-100" name="phoneNumber" #phone="ngModel" [ngModel]="customerEdit.phoneNumber" required pattern="^\d{10}$"/>
+        <span *ngIf="phone.invalid" class="danger w-100 d-block">
+          <span *ngIf="phone.errors?.required">Please fill in your number</span>
+          <span *ngIf="phone.errors?.pattern">the Number has to be 10 digits</span>
         </span>
       </div>
 
-    </div>
+  </div>
 
 
     <div class="col-md-12 row">
       <div class="col-md-6">
-        <button type="submit" class="button d-inline-block  ml-2" [disabled]="editForm.invalid" [allowSubmit]="editForm.valid">Save</button>
+        <button type="submit" class="button d-inline-block  ml-2" [disabled]="f.invalid" [allowSubmit]="f.valid">Save</button>
       </div>
       <div class="col-md-6">
         <button class="button d-inline-block bg-danger" (click)="onCancelEdit()" type="button">Cancel</button>
@@ -70,4 +68,5 @@
     </div>
   </form>
 </div>
-<app-confirm *ngIf="isConfirmBoxOpen" [question]="confirmQuesion" (close)="isConfirmBoxOpen = false" (confirm)="onConfirm()"></app-confirm>
+<app-confirm-dialog *ngIf="isConfirmDialogOpen" [question]="'Are you sure you want to discard the changes you have made?'"  (isConfirmed)="onConfirm($event)"></app-confirm-dialog>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

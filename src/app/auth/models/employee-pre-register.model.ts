@@ -1,8 +1,6 @@
-export class EmployeePreRegisterModel
+export interface EmployeePreRegisterModel
 {
-  constructor(
-    public personalEmail: string,
-    public userName: string,
-    public role:string
-  ) { }
+     personalEmail: string;
+     userName: string;
+  role: string;
 }

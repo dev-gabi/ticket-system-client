@@ -1,14 +1,16 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src",
-    "\\src\\app",
-    "\\src\\app\\auth",
-    "\\src\\app\\auth\\guards",
-    "\\src\\app\\tickets\\image-preview",
+    "\\src\\app\\auth\\auth\\register\\refresh-token",
+    "\\src\\app\\customers\\customer-details",
+    "\\src\\app\\customers\\customer-details\\customer-details-edit",
+    "\\src\\app\\shared\\search",
+    "\\src\\app\\shared\\search\\search-user",
+    "\\src\\app\\support\\supporter-details",
+    "\\src\\app\\support\\supporter-details\\supporter-edit",
     "\\src\\app\\tickets\\ticket",
-    "\\src\\app\\tickets\\ticket\\ticket-reply"
+    "\\src\\app\\utils"
   ],
-  "SelectedNode": "\\src\\app\\auth\\auth-interceptor.service.ts",
+  "SelectedNode": "\\src",
   "PreviewInSolutionExplorer": true
 }

@@ -1,0 +1,11 @@
+
+<div class="confirm-container" (click)="onConfirm(false)"></div>
+<div class="confirm-box">
+  <p class="text-center text-large">{{ question }}</p>
+  <br />
+  <div class="confirm-box-actions mx-auto">
+
+    <button class="button  d-inline mr-2" (click)="onConfirm(true)">Confirm</button>
+    <button class="button  d-inline  bg-danger " (click)="onConfirm(false)">Cancel</button>
+  </div>
+</div>

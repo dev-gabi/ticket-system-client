@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forbidden',
-  templateUrl: './forbidden.component.html'
+  templateUrl: './forbidden.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ForbiddenComponent implements OnInit, OnDestroy
 {

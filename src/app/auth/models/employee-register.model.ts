@@ -1,10 +1,8 @@
-export class EmployeeRegisterModel {
-  constructor(
-    public password: string,
-    public confirmPassword: string,
-    public phoneNumber: string,
-    public resetToken: string,
-    public email: string,
-    public userName:string
-  ) {  }
+export interface EmployeeRegisterModel {
+     password: string;
+     confirmPassword: string;
+     phoneNumber: string;
+     resetToken: string;
+     email: string;
+  userName: string;
 }

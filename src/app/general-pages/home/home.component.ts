@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AuthService } from '../../auth/auth.service';
+import { GeneralBase } from '../general-base';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +20,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent  {
-
-
+export class HomeComponent extends GeneralBase
+{
+  constructor(protected authService: AuthService) { super(authService) }
 }

@@ -1,14 +1,14 @@
-<div class=" col-md-6 d-block mx-auto text-large" >
-  <h3>Category Filter</h3>
-  <label></label>
-  <span tabindex="0"
-        (focus)="hideCategories = false"
-        class="input w-100 btn text-large"
-        #input
-       id="categorySelect" >{{selectedCategory}}</span>
+<div class="d-block mx-auto">
+  <div class="row w-100 mobile-only">
+    <h3 class="center-text col-6 p-0 inline-flex">Filter by category: </h3>
+    <div class="col-5 inline-flex">
+      <select *ngIf="categories$ | async as categories" class="search-ul mb-0">
+        <option *ngFor="let cat of categories" (click)="onSelectCategory(cat.name)" [selected]="cat.name == selectAll">{{cat.name}}</option>
+      </select>
+    </div>
+  </div>
 
-  <ul *ngIf="!hideCategories && categories$ | async as categories" class="search-ul w-100" id="categories">
-    <li *ngFor="let cat of categories" (click)="onSelectCategory(cat)" class="pointer" tabindex="0">{{cat}}</li>
-  </ul>
-
+  <select *ngIf="categories$ | async as categories" class="desktop-only search-ul mb-0">
+    <option *ngFor="let cat of categories" (click)="onSelectCategory(cat.name)" [selected]="cat.name == selectAll">{{cat.name}}</option>
+  </select>
 </div>

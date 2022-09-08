@@ -7,8 +7,10 @@ import { NewTicketComponent } from './new-ticket/new-ticket.component';
 import { SharedModule } from '../shared/shared.module';
 import { FormsModule } from '@angular/forms';
 import { TicketReplyComponent } from './ticket/ticket-reply/ticket-reply.component';
-import { ImagePreviewComponent } from './image-preview/image-preview.component';
-import { CategoryFilterComponent } from './ticket-list/category-filter/category-filter.component';  
+
+import { CategoryFilterComponent } from './ticket-list/category-filter/category-filter.component';
+import { StatusFilterComponent } from './ticket-list/status-filter/status-filter.component';  
+import { ImagePreviewComponent } from './new-ticket/image-preview/image-preview.component';
 
 
 
@@ -19,7 +21,8 @@ import { CategoryFilterComponent } from './ticket-list/category-filter/category-
     NewTicketComponent,
     TicketReplyComponent,
     ImagePreviewComponent,
-    CategoryFilterComponent
+    CategoryFilterComponent,
+    StatusFilterComponent
 
   ],
   imports: [

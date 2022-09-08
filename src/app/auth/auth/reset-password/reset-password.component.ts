@@ -1,78 +1,93 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { finalize, switchMap, takeUntil } from 'rxjs/operators';
+import { DestroyPolicy } from '../../../utils/destroy-policy';
 import { AuthService } from '../../auth.service';
 import { ResetPassword } from '../../models/reset-password.model';
 
 @Component({
   selector: 'app-reset-password',
-  templateUrl: './reset-password.component.html'
+  templateUrl: './reset-password.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ResetPasswordComponent implements OnInit, OnDestroy
+export class ResetPasswordComponent extends DestroyPolicy implements OnInit
 {
 
-  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private authService: AuthService, private cdr: ChangeDetectorRef) { super(); }
 
   resetToken: string;
   userId: string;
   message: string;
   isLoading = false;
   isSuccess = false;
+  error$ = this.authService.error$;
   @ViewChild('f') form: NgForm;
-  paramsSub: Subscription;
+
 
   ngOnInit(): void
   {
-    this.paramsSub = this.route.queryParams.subscribe(
-        (params: Params) =>
-        {
-          this.resetToken = params["token"];
-          this.userId = params["id"];
-        this.authService.validateRegistrationToken(this.resetToken, params["email"]).subscribe(
-          ((isValid: boolean) =>
-          {
-            if (!isValid)  this.message = "Token was expired. \n contact your admin to get a new registation email.";
-
-          }),
-          error => { this.message = "Invalid registration token"; }
+    this.route.queryParams.pipe(
+      switchMap((params: Params) =>
+      {
+        this.resetToken = params["token"];
+        this.userId = params["id"];
+        return this.authService.validateRegistrationToken(this.resetToken, params["email"])
+      }),
+      finalize(() => { this.cdr.markForCheck();}),
+      takeUntil(this.destroy$),
+    ).subscribe(              
+          (isValid: boolean) =>
+      {
+            if (!isValid) {
+              this.message = "Token was expired. \n contact your admin to get a new registation email.";
+       
+            }
+          }
         );
-        }
-      )
+
   }
   onSubmit(formData:{newPassword:string, confirmPassword:string})
   {
     this.isLoading = true;
-    const resetPasswordData = new ResetPassword(formData.newPassword, formData.confirmPassword, this.userId, this.resetToken);
     this.form.reset();
-    this.authService.resetPassword(resetPasswordData).subscribe(
+    this.cdr.markForCheck();
+
+    const resetPasswordData: ResetPassword = {
+      newPassword: formData.newPassword,
+      confirmPassword: formData.confirmPassword,
+      userId: this.userId,
+      resetToken: this.resetToken
+    };
+
+    this.authService.resetPassword(resetPasswordData).pipe(
+      finalize(() =>
+      {
+        this.isLoading = false;
+        this.cdr.markForCheck();
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(
       response =>
       {
-        if (response.isSuccess) {
           this.message = response.message;
           this.isSuccess = true;
-        } else {
-          this.message = response.errors.toString();
-        }
-        this.isLoading = false;
-      },
-      error =>
-      {
-        this.message = error;
-        this.isLoading = false;
       }
     );
   }
+
   onConfirm()
   {
-    this.message = null;
     if (this.isSuccess) {
       this.router.navigate(['/auth/login']);
+    } else {
+      this.message = null;
     }
   }
-  ngOnDestroy()
+
+  onCloseAlert()
   {
-    if (this.paramsSub)
-      this.paramsSub.unsubscribe();
+    this.authService.clearError();
   }
 }
