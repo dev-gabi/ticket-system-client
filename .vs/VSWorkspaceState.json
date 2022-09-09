@@ -1,16 +1,15 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src\\app\\auth\\auth\\register\\refresh-token",
-    "\\src\\app\\customers\\customer-details",
-    "\\src\\app\\customers\\customer-details\\customer-details-edit",
-    "\\src\\app\\shared\\search",
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\auth",
+    "\\src\\app\\auth\\guards",
+    "\\src\\app\\shared\\layout\\top-nav",
     "\\src\\app\\shared\\search\\search-user",
     "\\src\\app\\support\\supporter-details",
-    "\\src\\app\\support\\supporter-details\\supporter-edit",
-    "\\src\\app\\tickets\\ticket",
-    "\\src\\app\\utils"
+    "\\src\\app\\support\\supporter-details\\supporter-edit"
   ],
-  "SelectedNode": "\\src",
+  "SelectedNode": "\\src\\app\\auth\\guards\\form-deactivate.guard.ts",
   "PreviewInSolutionExplorer": true
 }

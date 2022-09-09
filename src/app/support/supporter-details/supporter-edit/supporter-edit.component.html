@@ -9,7 +9,6 @@
       </div>
       <div class="col-md-9">
       <input type="text" class="border-bottom w-100" name="name" required minlength=2 [ngModel]="supporter.name" #name="ngModel" />
-        <br/>
         <span *ngIf="name.invalid" class="danger d-block w-100">
           <span *ngIf="name.errors?.minlength">Name should be longer than 1 character</span>
           <span *ngIf="name.errors?.required">Please fill in your name</span>
