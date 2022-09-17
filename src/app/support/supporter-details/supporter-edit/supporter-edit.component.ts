@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { CanFormDeactivate } from '../../../auth/guards/form-deactivate.guard';
 import { DestroyPolicy } from '../../../utils/destroy-policy';
 import { Supporter } from '../../models/supporter.model';
@@ -46,10 +47,10 @@ export class SupporterEditComponent extends DestroyPolicy implements OnInit, Can
       isActive: editedData.isActive,
       registrationDate: this.supporter.registrationDate
     };
-    this.supportService.editSupporter(editedSupporter).subscribe(
-    
+    this.supportService.editSupporter(editedSupporter).pipe(takeUntil(this.destroy$)).subscribe(
+      () => this.router.navigate(['../'], { relativeTo: this.route })
     );
-    this.router.navigate(['../'], { relativeTo: this.route });
+   
   }
   onCancelEdit()
   {
@@ -59,7 +60,6 @@ export class SupporterEditComponent extends DestroyPolicy implements OnInit, Can
   {
     this.isConfirmDialogOpen = true;
     this.cdr.markForCheck();
-    console.log(this.confirmSubject)
   }
   onConfirm(isConfirmed: boolean)
   {

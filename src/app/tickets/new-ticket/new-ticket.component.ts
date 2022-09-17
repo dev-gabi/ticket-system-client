@@ -43,11 +43,9 @@ export class NewTicketComponent extends DestroyPolicy implements OnInit, CanForm
   {
     this.isConfirmDialogOpen = true;
     this.cdr.markForCheck();
-    console.log(this.confirmSubject)
   };
   onConfirm(isConfirmed: boolean)
   {
-    console.log("new ticket comp - on Confirm")
     this.confirmSubject.next(isConfirmed);
     this.isConfirmDialogOpen = false;
   };

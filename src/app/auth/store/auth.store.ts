@@ -6,7 +6,7 @@ import { AuthUser } from '../models/auth-user.model';
 
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name:'auth' })
+  @StoreConfig({ name: 'auth', resettable: true })
 export class AuthStore extends GenericStore<AuthUser, string>{
   constructor()
   { super(); }

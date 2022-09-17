@@ -11,7 +11,7 @@ import { CustomerPanelComponent } from './customer-panel/customer-panel.componen
 
 const routes: Routes = [
   {
-    path: '', component: CustomerPanelComponent, canActivate: [AuthGuard],
+    path: '', component: CustomerPanelComponent, /*canActivate: [AuthGuard],*/
     children: [
 
       { path: 'edit', component: CustomerDetailsEditComponent, canDeactivate: [FormDeactivateGuard] },
@@ -19,7 +19,7 @@ const routes: Routes = [
         path: 'tickets', component: TicketListComponent, children: [
           { path: 'new', component: NewTicketComponent,
             pathMatch: 'full', canDeactivate: [FormDeactivateGuard]},
-          { path: ':id', component: TicketComponent }
+          { path: ':id', component: TicketComponent, canDeactivate: [FormDeactivateGuard] }
         ]
       },
 

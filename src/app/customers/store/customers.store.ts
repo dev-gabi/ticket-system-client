@@ -6,7 +6,7 @@ import { Customer } from '../models/customer.model';
 
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'customers' })
+@StoreConfig({ name: 'customers', resettable:true })
 export class CustomersStore extends UsersStore<Customer, string>{
   constructor()
   {

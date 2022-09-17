@@ -1,15 +1,4 @@
 {
-  "ExpandedNodes": [
-    "",
-    "\\src",
-    "\\src\\app",
-    "\\src\\app\\auth",
-    "\\src\\app\\auth\\guards",
-    "\\src\\app\\shared\\layout\\top-nav",
-    "\\src\\app\\shared\\search\\search-user",
-    "\\src\\app\\support\\supporter-details",
-    "\\src\\app\\support\\supporter-details\\supporter-edit"
-  ],
-  "SelectedNode": "\\src\\app\\auth\\guards\\form-deactivate.guard.ts",
+  "ExpandedNodes": [],
   "PreviewInSolutionExplorer": true
 }

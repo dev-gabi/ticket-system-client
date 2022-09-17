@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
 import { AuthService } from '../../auth/auth.service';
 import { CustomersBase } from '../customers-base';
 import { CustomersService } from '../customers.service';
@@ -23,9 +22,8 @@ export class CustomerDetailsComponent extends CustomersBase
   customer$: Observable<Customer> = this.query.selectActive() as Observable<Customer>;
   error$: Observable<string>;
   isEdit = false;
-  isLoggingOut = false;
 
-  ngAfterViewInit(): void
+  ngOnInit(): void
   {
     this.subscribeIsLoggingOut();
 
@@ -36,13 +34,7 @@ export class CustomerDetailsComponent extends CustomersBase
     this.error$ = this.customerService.error$;
   }
 
-  subscribeIsLoggingOut()
-  {
-    this.authService.loggingOut.pipe(takeUntil(this.destroy$))
-      .subscribe(
-      () =>  this.isLoggingOut = true 
-    );
-  }
+
   onEdit()
   {
     this.router.navigate(['edit'], { relativeTo: this.route });

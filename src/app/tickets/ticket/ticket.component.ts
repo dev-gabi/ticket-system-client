@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
@@ -16,10 +16,15 @@ import { TicketService3 } from '../ticket.service3';
   templateUrl: './ticket.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TicketComponent extends DestroyPolicy implements OnInit
+export class TicketComponent extends DestroyPolicy implements OnInit, CanFormDeactivate
 {
   constructor(private ticketService: TicketService3, private route: ActivatedRoute,
-    private authService: AuthService) { super();}
+    private authService: AuthService, private cdr: ChangeDetectorRef) { super(); }
+
+
+  confirmSubject = new Subject<boolean>();
+  isSaved = false;
+  isConfirmDialogOpen = false;
 
   ticket$: Observable<Ticket>;
   error$: Observable<string>;
@@ -28,7 +33,7 @@ export class TicketComponent extends DestroyPolicy implements OnInit
   closed = environment.ticketStatus.closed;
   isCustomer: boolean;
   imageFile: File;
-  @ViewChild('addReplyForm') addReplyForm: NgForm;
+  @ViewChild('addReplyForm') form: NgForm;
   confirmCloseTicket = false;
 
 
@@ -55,12 +60,18 @@ export class TicketComponent extends DestroyPolicy implements OnInit
       takeUntil(this.destroy$),
     ).subscribe();
     this.imageFile = null;
-    this.addReplyForm.reset(); 
+    this.form.reset(); 
   }
   setFile(fileOutput: File)
   {
     this.imageFile = fileOutput;
   }
+
+  openConfirmDialog()
+  {
+    this.isConfirmDialogOpen = true;
+    this.cdr.markForCheck();
+  };
 
   onCloseAlert()
   {
@@ -68,14 +79,23 @@ export class TicketComponent extends DestroyPolicy implements OnInit
   }
   onConfirm(isConfirmed: boolean)
   {
-    if (isConfirmed) {
-      this.ticketService.closeTicket(this.ticketId).pipe(
-        takeUntil(this.destroy$))
-        .subscribe();
-    
-      this.ticketService.filterByStatus(environment.ticketStatus.open);
-    //  this.router.navigate(["../"], { relativeTo: this.route }); //causes exception
+    if (this.confirmCloseTicket && isConfirmed) {
+      this.closeTicket();
     }
+    if (this.isConfirmDialogOpen && isConfirmed) {
+      this.confirmSubject.next(isConfirmed);
+    }
+    this.isConfirmDialogOpen = false;
     this.confirmCloseTicket = false;
   }
+
+  closeTicket()
+  {
+    this.ticketService.closeTicket(this.ticketId).pipe(
+      takeUntil(this.destroy$))
+      .subscribe();
+
+    this.ticketService.filterByStatus(environment.ticketStatus.open);
+  }
+
 }

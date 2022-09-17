@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
 import { AuthService } from '../../../auth/auth.service';
@@ -17,7 +19,7 @@ export class TopNavComponent extends DestroyPolicy implements OnInit
   supporter = environment.roles.supporter;
   customer = environment.roles.customer;
 
-  constructor(private authService: AuthService, private cdr: ChangeDetectorRef) { super(); }
+  constructor(private authService: AuthService, private router: Router) { super(); }
   isAuthenticated = false;
   role: string;
   userName: string;
@@ -34,24 +36,12 @@ export class TopNavComponent extends DestroyPolicy implements OnInit
         } 
         }
     );
-
-    //this.subscription = this.authService.user.subscribe(
-    //  (user: AuthUser) =>
-    //  {
-    //    this.isAuthenticated = !!user;
-
-    //    if (user) {
-    //      this.userName = user.userName;
-    //      this.getRole(user.role);
-    //    } 
-    //    }
-    //  );
   }
 
   onLogout()
   {
-    this.authService.logOut();
     this.isAuthenticated = false;
+    this.router.navigate(['/logout']);
   }
 
 }

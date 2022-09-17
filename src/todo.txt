@@ -1,0 +1,2 @@
+
+logout from ticket list comp: Error Object { message: "object unsubscribed", name: "ObjectUnsubscribedError", stack: "" }

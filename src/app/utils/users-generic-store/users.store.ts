@@ -27,7 +27,8 @@ export abstract class UsersStore<entityType, idType> extends EntityStore<EntityS
   }
   clear()
   {
-    this.set([]);
+    //this.set([]);
+    this.reset();
     this.update({ isAllLoaded: false, isSingleLoaded: false });
   }
 }

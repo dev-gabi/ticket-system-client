@@ -5,16 +5,15 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { BaseService } from '../utils/base-service';
-
 import { GetTicketsByUser } from './models/get-tickets-by-user.model';
 import { ReplyImage } from './models/reply-image.model';
 import { ReplyResponse } from './models/response/reply-response.model';
 import { TicketResponse } from './models/response/ticket-response.model';
-import { TicketsResponse } from './models/response/tickets-response.model';
 import { TicketReply } from './models/ticket-reply.model';
 import { Ticket } from './models/ticket.model';
 import { TicketsQuery } from './store/tickets-query';
 import { TicketsStore } from './store/tickets-store';
+
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +41,6 @@ export class TicketService3 extends BaseService
    */
   fetchTickets(role: string, ticketStatus: string): Observable<TicketResponse[]>
   {
-    
     if (role === environment.roles.customer) {
       return this.getTicketsByUserId(ticketStatus);
     } else {
@@ -50,6 +48,12 @@ export class TicketService3 extends BaseService
     }
   }
 
+  reFetchTickets(role: string)
+  {
+    console.log("refetch")
+    this.ticketStore.update({ isClosedTicketsLoaded: false });
+    return this.fetchTickets(role, environment.ticketStatus.open);
+  }
   private getTicketsByUserId(status:string)
   {
     const payloadReq: GetTicketsByUser = { id: this.userId, status: status }
@@ -69,7 +73,7 @@ export class TicketService3 extends BaseService
         catchError(this.handleHttpError),
         tap(tickets =>
         {
-            status == environment.ticketStatus.open ? this.ticketStore.setTickets(tickets) : this.ticketStore.addClosedTickets(tickets);
+          status == environment.ticketStatus.open ? this.ticketStore.setTickets(tickets) : this.ticketStore.addClosedTickets(tickets);
         }));
   }
 

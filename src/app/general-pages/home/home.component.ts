@@ -23,4 +23,5 @@ import { GeneralBase } from '../general-base';
 export class HomeComponent extends GeneralBase
 {
   constructor(protected authService: AuthService) { super(authService) }
+
 }

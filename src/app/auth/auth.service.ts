@@ -1,9 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import ls from 'localstorage-slim';
-import { Observable, Subject, throwError } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { BaseService } from '../utils/base-service';
@@ -55,6 +55,7 @@ export class AuthService extends BaseService
   {
     if (isPlatformBrowser(this.platformId)) {
       this.autoLogin();
+   
     }
   }
 
@@ -64,7 +65,7 @@ export class AuthService extends BaseService
     ls.config.secret = this.lsObfuscateKey;
 
     const userData = this.getUserDataFromLocalStorage();
-    if (!userData) { return }
+    if (!userData) { return; }
     const loadedUser = new AuthUser(userData.id, userData.userName, userData.role, userData._token, new Date(userData._expiresIn));
 
     if (loadedUser.token) {
@@ -73,6 +74,7 @@ export class AuthService extends BaseService
       const tokenExpirationInMiliseconds: number = new Date(loadedUser._expiresIn).getTime() - new Date().getTime();
       this.autoLogout(tokenExpirationInMiliseconds);
     }
+
   }
 
 
@@ -109,16 +111,19 @@ export class AuthService extends BaseService
 
   logOut()
   {
+    console.log("logout");
     this.loggingOut.next();
     this.router.navigate(['/']);
+  
     this.http.get(environment.endpoints.auth.logout).subscribe();
 
     if (this.tokenExpirationTimer) {
       clearTimeout(this.tokenExpirationTimer);
     }
     this.tokenExpirationTimer = null;
-
+ 
     localStorage.removeItem(environment.localStorage.userKey);
+
     this.clearStoreCollection();
   }
 
@@ -133,9 +138,10 @@ export class AuthService extends BaseService
   }
   private clearStoreCollection()
   {
+
     this.storeCollection.customersStore.clear();
     this.storeCollection.supportersStore.clear();
-    this.storeCollection.ticketsStore.clearTickets();
+     this.storeCollection.ticketsStore.clearTickets();
     this.storeCollection.authStore.clear();
   }
   getLoggedInUser()

@@ -6,7 +6,7 @@ import { TicketsState } from './tickets-state.model';
   providedIn: 'root'
 })
 
-@StoreConfig({ name: 'tickets' })
+@StoreConfig({ name: 'tickets', resettable:true })
 export class TicketsStore extends EntityStore<TicketsState>{
 
   constructor()
@@ -16,20 +16,23 @@ export class TicketsStore extends EntityStore<TicketsState>{
 
   setTickets(tickets: Ticket[])
   {
-    this.set(tickets);
-
-    this.update({isOpenTicketsLoaded: true});
+    this.set(tickets);   
+    this.update({ isOpenTicketsLoaded: true });
   }
   addClosedTickets(tickets: Ticket[])
-  { 
+  {
     this.add(tickets);
-    this.update({isClosedTicketsLoaded: true});
+    this.update({ isClosedTicketsLoaded: true });
   }
 
   clearTickets()
   {    
-    this.set([]);
-    this.update({ isOpenTicketsLoaded: false, isClosedTicketsLoaded:false });
+    this.reset();
+    this.update(state => ({
+      ...state,
+      isOpenTicketsLoaded: false,
+      isClosedTicketsLoaded: false,
+    }));
   }
 }
 

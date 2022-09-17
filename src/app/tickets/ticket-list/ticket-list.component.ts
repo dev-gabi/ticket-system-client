@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscribable, Subscription } from 'rxjs';
 import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
@@ -39,7 +39,9 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
       this.checkIfOpenTicketsLoaded();
     }
     this.error$ = this.ticketService.error$;
+   
     this.subscribeTpeAheadTickets();
+ 
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
   }
 
@@ -60,19 +62,18 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   {
     this.authService.loggingOut.pipe(takeUntil(this.destroy$))
       .subscribe(
-      () => this.isLoggingOut = true
+        () =>  this.isLoggingOut = true
     );
   }
   checkIfOpenTicketsLoaded()
   {
-    this.ticketsQuery.selectedIsOpenTicketsLoaded$.pipe(
-      takeUntil(this.destroy$),
-      filter(isLoaded => { return !isLoaded }),
+     this.ticketsQuery.selectedIsOpenTicketsLoaded$.pipe(     
+      filter(isLoaded => { return !isLoaded }),     
       switchMap((isLoaded) =>
       {
         return this.ticketService.fetchTickets(this.userRole, environment.ticketStatus.open)
       }),
-   
+      takeUntil(this.destroy$),
     ).subscribe();
   }
   /**
@@ -109,12 +110,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   reFetchTickets()
   {
-   this.ticketService.fetchTickets(this.userRole, environment.ticketStatus.open)
-      .pipe(takeUntil(this.destroy$))
-     .subscribe(() =>
-        this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))))
-       );
-
+    this.ticketService.reFetchTickets(this.userRole);
     this.onQueryByStatus(environment.ticketStatus.open);  
   }
 
@@ -128,4 +124,5 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   {
     this.ticketService.clearError();
   }
+
 }

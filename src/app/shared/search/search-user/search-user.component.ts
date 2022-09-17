@@ -3,12 +3,14 @@ import { Router } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { AuthService } from '../../../auth/auth.service';
 import { CustomersService } from '../../../customers/customers.service';
 import { CustomersQuery } from '../../../customers/store/customers.query';
 import { SupportersQuery } from '../../../support/store/supporters.query';
 import { SupportService } from '../../../support/support.service';
 import { TicketService3 } from '../../../tickets/ticket.service3';
 import { DestroyPolicy } from '../../../utils/destroy-policy';
+import { LogoutPolicy } from '../../../utils/logout-policy';
 import { BaseUser } from '../../base-user.model';
 
 
@@ -18,7 +20,7 @@ import { BaseUser } from '../../base-user.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SearchUserComponent extends DestroyPolicy implements OnInit, AfterViewInit
+export class SearchUserComponent extends LogoutPolicy implements OnInit, AfterViewInit
 {
   constructor(
     private ticketService: TicketService3,
@@ -27,8 +29,9 @@ export class SearchUserComponent extends DestroyPolicy implements OnInit, AfterV
     private customersService:CustomersService,
     private router: Router,
     private supportersQuery: SupportersQuery,
-    private customersQuery: CustomersQuery  )
-  { super(); }
+    private customersQuery: CustomersQuery,
+    protected authService: AuthService)
+  { super(authService); }
 
   @ViewChild('searchInput') searchInput: ElementRef;
   @Input('roleSearch') roleSearch: string;
@@ -38,27 +41,34 @@ export class SearchUserComponent extends DestroyPolicy implements OnInit, AfterV
 
   ngOnInit(): void
   {
-    if (this.roleSearch == environment.roles.supporter) {
+    this.subscribeIsLoggingOut();
+    if (!this.isLoggingOut && this.roleSearch == environment.roles.supporter  ) {
       this.users$ = this.supportService.searchUsers$;
       this.checkIfSuportersLoaded();
     }
-    else if (this.roleSearch == environment.roles.customer) {
+    else if (!this.isLoggingOut && this.roleSearch == environment.roles.customer ) {
       this.users$ = this.customersService.searchUsers$;
       this.checkIfCustomersLoaded();
     }
 
   }
+
   checkIfSuportersLoaded()
   {
-    this.supportersQuery.selectedIsAllLoaded$.pipe(
-      filter(isLoaded => { return !isLoaded }),
-      switchMap(() =>
-      {
-        return this.supportService.getAll();
-      }),
-      takeUntil(this.destroy$)
-    ).subscribe();
+
+    if (!this.isLoggingOut) {
+      this.supportersQuery.selectedIsAllLoaded$.pipe(
+        filter(isLoaded => { return !isLoaded }),
+        switchMap(() =>
+        {
+          return this.supportService.getAll();
+        }),
+        takeUntil(this.destroy$)
+      ).subscribe();
+    }
+
   }
+
 
   checkIfCustomersLoaded()
   {

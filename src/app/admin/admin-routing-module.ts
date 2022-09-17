@@ -16,10 +16,10 @@ const routes: Routes = [
     path: '', component: AdminComponent, canActivate: [AdminAuthGuard], children: [
       {
 
-            path: 'supporters', children: [
-              { path: 'search', component: SupporterSearchComponent },
+        path: 'supporters', children: [
+          { path: 'search', component: SupporterSearchComponent },
               {
-                path: ':name', component: SupporterDetailsComponent, children: [
+                path: ':name', component: SupporterDetailsComponent,  children: [
                   { path: 'edit', component: SupporterEditComponent, canDeactivate: [FormDeactivateGuard] },
                 ]
               }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Params, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Params, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -10,20 +10,21 @@ import { AuthQuery } from '../store/auth.query';
 @Injectable({
   providedIn:'root'
 })
-export class EmployeeAuthGuard implements CanActivate
+export class EmployeeAuthGuard implements CanActivateChild
 {
   constructor(private authQuery: AuthQuery, private authService: AuthService,  private router: Router) { }
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>
+  canActivateChild(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>
   {
     this.authService.browserPlatformAutoLogin();
 
     return (this.authQuery.selectActive() as Observable<AuthUser>).pipe(
       map(user =>
       {
-        const isAuthenticatedEmployee = user != null && (user.role === environment.roles.supporter || user.role === environment.roles.admin);
-        if (isAuthenticatedEmployee) { return true; }
+          const isAuthenticatedEmployee = user != null && (user.role === environment.roles.supporter || user.role === environment.roles.admin);
+          if (isAuthenticatedEmployee) { return true; }
 
-        const queryParams: Params = { message: 'Restricted Aceess' };
+
+        const queryParams: Params = { message: 'Restricted Aceess To Supporters' };
         return this.router.createUrlTree(['/401'], { queryParams: queryParams });
       })
     );

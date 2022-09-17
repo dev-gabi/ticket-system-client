@@ -21,7 +21,7 @@ export abstract class GenericStore<entityType, idType> extends EntityStore<Entit
   }
   clear()
   {
-    this.set([]);
+    this.reset();
     this.update({ isLoaded: false });
   }
 }

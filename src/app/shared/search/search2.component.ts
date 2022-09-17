@@ -33,8 +33,11 @@ export class Search2Component implements  OnInit
   }
   getRole()
   {
-    const role = this.authService.getLoggedInUser().role;
-    role == environment.roles.customer ? this.isCustomer = true : this.isCustomer = false;
+    const loggedUser = this.authService.getLoggedInUser();
+    if (loggedUser) {
+      loggedUser.role == environment.roles.customer ? this.isCustomer = true : this.isCustomer = false;
+    }
+   
   }
 
   onSearchTypeChange(event: any)

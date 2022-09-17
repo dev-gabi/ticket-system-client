@@ -46,5 +46,6 @@
   </div>
 
 </div>
+<app-confirm-dialog *ngIf="isConfirmDialogOpen" [question]="'Discard new reply?'" (isConfirmed)="onConfirm($event)"></app-confirm-dialog>
 <app-confirm-dialog *ngIf="confirmCloseTicket" [question]="'Are you sure you want to close this ticket?'" (isConfirmed)="onConfirm($event)"></app-confirm-dialog>
 <app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>
