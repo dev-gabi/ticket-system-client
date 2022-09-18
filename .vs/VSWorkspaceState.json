@@ -1,4 +1,14 @@
 {
-  "ExpandedNodes": [],
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\app\\customers\\customer-details",
+    "\\src\\app\\shared\\search",
+    "\\src\\app\\shared\\search\\search-user",
+    "\\src\\app\\support\\supporter-details",
+    "\\src\\app\\tickets\\ticket-list",
+    "\\src\\environments"
+  ],
+  "SelectedNode": "\\src\\environments\\environment.prod.ts",
   "PreviewInSolutionExplorer": true
 }

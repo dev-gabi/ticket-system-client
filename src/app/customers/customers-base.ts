@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { AuthUser } from '../auth/models/auth-user.model';
-import { LogoutPolicy } from '../utils/logout-policy';
+import { DestroyPolicy } from '../utils/destroy-policy';
 import { CustomersService } from './customers.service';
 import { CustomersQuery } from './store/customers.query';
 
 @Injectable()
-export abstract class CustomersBase extends LogoutPolicy
+export abstract class CustomersBase extends DestroyPolicy
 {
   constructor(
     protected customerService: CustomersService,
     protected query: CustomersQuery,
     protected authService: AuthService
-  ) { super(authService); }
+  ) { super(); }
 
   
 

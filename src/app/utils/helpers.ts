@@ -17,13 +17,11 @@ export class Helpers
 
   public static limitBaseUsersResult(users:BaseUser[])
   {
-   
-    const resultLength = users.length;
 
-    if (resultLength > environment.typeAhead.resultNumDisplay) {
-      const resultsNumtoRemove = resultLength - environment.typeAhead.resultNumDisplay;
-      users.splice(0, resultsNumtoRemove);
-      const moreResults: BaseUser = { id: null, name: `And ${resultsNumtoRemove} more results.`, role: null, isActive: false };
+    if (users.length > environment.typeAhead.resultNumDisplay) {
+      const diff = users.length - environment.typeAhead.resultNumDisplay;
+      users.splice(0, diff);
+      const moreResults: BaseUser = { id: null, name: `And ${diff} more results.`, role: null, isActive: false };
       users.push(moreResults);      
     }
     return users;

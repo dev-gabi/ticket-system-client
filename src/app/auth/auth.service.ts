@@ -25,7 +25,6 @@ import { AuthQuery } from './store/auth.query';
 export class AuthService extends BaseService
 {
   tokenExpirationTimer: any = null;
-  loggingOut = new Subject<void>();
   lsObfuscateKey = 80;
 
   constructor(private router: Router, private http: HttpClient, private authQuery: AuthQuery,
@@ -111,8 +110,6 @@ export class AuthService extends BaseService
 
   logOut()
   {
-    console.log("logout");
-    this.loggingOut.next();
     this.router.navigate(['/']);
   
     this.http.get(environment.endpoints.auth.logout).subscribe();

@@ -25,13 +25,8 @@ export class CustomerDetailsComponent extends CustomersBase
 
   ngOnInit(): void
   {
-    this.subscribeIsLoggingOut();
-
-    if (!this.isLoggingOut) {
       this.checkIfCustomerLoaded();
-    }
-  
-    this.error$ = this.customerService.error$;
+      this.error$ = this.customerService.error$;
   }
 
 

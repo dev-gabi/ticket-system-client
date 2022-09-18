@@ -26,18 +26,14 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   pageOfTickets$: Observable<any>;
   customerRole = environment.roles.customer;
   userRole: string;
-  isLoggingOut = false;
+
 
   ngOnInit()
   {
     this.ticketService.setUserId();
     this.userRole = this.authService.getLoggedInUser().role;
     this.isCustomer = this.userRole === this.customerRole;
-    this.subscribeIsLoggingOut();
-
-    if (!this.isLoggingOut) {
-      this.checkIfOpenTicketsLoaded();
-    }
+    this.checkIfOpenTicketsLoaded();
     this.error$ = this.ticketService.error$;
    
     this.subscribeTpeAheadTickets();
@@ -58,13 +54,6 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
       );
   }
 
-  subscribeIsLoggingOut()
-  {
-    this.authService.loggingOut.pipe(takeUntil(this.destroy$))
-      .subscribe(
-        () =>  this.isLoggingOut = true
-    );
-  }
   checkIfOpenTicketsLoaded()
   {
      this.ticketsQuery.selectedIsOpenTicketsLoaded$.pipe(     

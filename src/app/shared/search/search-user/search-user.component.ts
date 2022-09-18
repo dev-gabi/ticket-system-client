@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { fromEvent, Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../../auth/auth.service';
 import { CustomersService } from '../../../customers/customers.service';
@@ -10,8 +10,8 @@ import { SupportersQuery } from '../../../support/store/supporters.query';
 import { SupportService } from '../../../support/support.service';
 import { TicketService3 } from '../../../tickets/ticket.service3';
 import { DestroyPolicy } from '../../../utils/destroy-policy';
-import { LogoutPolicy } from '../../../utils/logout-policy';
 import { BaseUser } from '../../base-user.model';
+
 
 
 @Component({
@@ -20,7 +20,7 @@ import { BaseUser } from '../../base-user.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class SearchUserComponent extends LogoutPolicy implements OnInit, AfterViewInit
+export class SearchUserComponent extends DestroyPolicy implements OnInit, AfterViewInit
 {
   constructor(
     private ticketService: TicketService3,
@@ -31,7 +31,7 @@ export class SearchUserComponent extends LogoutPolicy implements OnInit, AfterVi
     private supportersQuery: SupportersQuery,
     private customersQuery: CustomersQuery,
     protected authService: AuthService)
-  { super(authService); }
+  { super(); }
 
   @ViewChild('searchInput') searchInput: ElementRef;
   @Input('roleSearch') roleSearch: string;
@@ -41,12 +41,12 @@ export class SearchUserComponent extends LogoutPolicy implements OnInit, AfterVi
 
   ngOnInit(): void
   {
-    this.subscribeIsLoggingOut();
-    if (!this.isLoggingOut && this.roleSearch == environment.roles.supporter  ) {
+
+    if (this.roleSearch == environment.roles.supporter  ) {
       this.users$ = this.supportService.searchUsers$;
       this.checkIfSuportersLoaded();
     }
-    else if (!this.isLoggingOut && this.roleSearch == environment.roles.customer ) {
+    else if (this.roleSearch == environment.roles.customer ) {
       this.users$ = this.customersService.searchUsers$;
       this.checkIfCustomersLoaded();
     }
@@ -55,9 +55,7 @@ export class SearchUserComponent extends LogoutPolicy implements OnInit, AfterVi
 
   checkIfSuportersLoaded()
   {
-
-    if (!this.isLoggingOut) {
-      this.supportersQuery.selectedIsAllLoaded$.pipe(
+     this.supportersQuery.selectedIsAllLoaded$.pipe(
         filter(isLoaded => { return !isLoaded }),
         switchMap(() =>
         {
@@ -65,8 +63,6 @@ export class SearchUserComponent extends LogoutPolicy implements OnInit, AfterVi
         }),
         takeUntil(this.destroy$)
       ).subscribe();
-    }
-
   }
 
 
