@@ -2,13 +2,14 @@
   "ExpandedNodes": [
     "",
     "\\src",
-    "\\src\\app\\customers\\customer-details",
-    "\\src\\app\\shared\\search",
-    "\\src\\app\\shared\\search\\search-user",
-    "\\src\\app\\support\\supporter-details",
+    "\\src\\app",
+    "\\src\\app\\tickets",
+    "\\src\\app\\tickets\\models",
+    "\\src\\app\\tickets\\ticket",
     "\\src\\app\\tickets\\ticket-list",
+    "\\src\\app\\tickets\\ticket-list\\category-filter",
     "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\environments\\environment.prod.ts",
+  "SelectedNode": "\\src\\app\\tickets\\ticket-list\\category-filter\\category-filter.component.ts",
   "PreviewInSolutionExplorer": true
 }

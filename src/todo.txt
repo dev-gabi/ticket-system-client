@@ -1,2 +1,3 @@
 
-logout from ticket list comp: Error Object { message: "object unsubscribed", name: "ObjectUnsubscribedError", stack: "" }
+every tickets refetch after initial fetch produces an error from store:
+ Error Object { message: "object unsubscribed", name: "ObjectUnsubscribedError", stack: "" }

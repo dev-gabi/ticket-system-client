@@ -50,18 +50,19 @@ export class TicketService3 extends BaseService
 
   reFetchTickets(role: string)
   {
-    console.log("refetch")
-    this.ticketStore.update({ isClosedTicketsLoaded: false });
+
+    this.ticketStore.clearTickets();
     return this.fetchTickets(role, environment.ticketStatus.open);
   }
   private getTicketsByUserId(status:string)
   {
+
     const payloadReq: GetTicketsByUser = { id: this.userId, status: status }
     return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getByUserId, payloadReq).pipe(
       catchError(this.handleHttpError),
       tap(tickets =>
       {
-          status == environment.ticketStatus.open ? this.ticketStore.setTickets(tickets) : this.ticketStore.addClosedTickets(tickets);
+        status == environment.ticketStatus.open ? this.ticketStore.setTickets(tickets) : this.ticketStore.addClosedTickets(tickets);
       }));
 
   }

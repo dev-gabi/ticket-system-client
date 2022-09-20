@@ -33,7 +33,7 @@
       "installMode": "lazy",
       "updateMode": "lazy",
       "urls": [
-        "https://localhost:44388/api/tickets/get-categories"
+        "https://api.ticket-system.xyz/api/tickets/get-categories"
       ],
       "cacheConfig": {
         "maxSize": 5,

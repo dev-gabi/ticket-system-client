@@ -26,6 +26,7 @@ export class CategoryFilterComponent extends DestroyPolicy
 
   ngOnInit()
   {
+
     this.categoriesQuery.selectedIsCategoriesLoaded$.pipe(
       filter(isLoaded => !isLoaded),
       switchMap((isLoaded) =>
@@ -36,7 +37,7 @@ export class CategoryFilterComponent extends DestroyPolicy
       .subscribe();
   }
 
-  onSelectCategory(category:string)
+  onSelectCategory(category: string)
   {
     this.category.emit(category);
   }

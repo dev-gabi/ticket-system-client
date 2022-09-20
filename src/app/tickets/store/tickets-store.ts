@@ -16,8 +16,11 @@ export class TicketsStore extends EntityStore<TicketsState>{
 
   setTickets(tickets: Ticket[])
   {
-    this.set(tickets);   
+  
+    this.set(tickets);
+
     this.update({ isOpenTicketsLoaded: true });
+
   }
   addClosedTickets(tickets: Ticket[])
   {

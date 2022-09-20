@@ -8,8 +8,8 @@
     </div>
   </div>
 
-  <select class="desktop-only search-ul p-0 center-text mb-0">
-    <option *ngFor="let status of statusOpt" (click)="onSelectStatus(status)">{{status}}</option>
+  <select class="desktop-only search-ul p-0 center-text mb-0" #status (change)="onSelectStatus(status.value)">
+    <option *ngFor="let status of statusOpt" >{{status}}</option>
   </select>
 
 </div>

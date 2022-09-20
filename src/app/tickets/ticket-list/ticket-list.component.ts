@@ -36,12 +36,12 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     this.checkIfOpenTicketsLoaded();
     this.error$ = this.ticketService.error$;
    
-    this.subscribeTpeAheadTickets();
+   // this.subscribeTypeAheadTickets();
  
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
   }
 
-  subscribeTpeAheadTickets()
+  subscribeTypeAheadTickets()
   {
     this.ticketService.typeAheadTickets$.pipe(
       takeUntil(this.destroy$)).subscribe(
@@ -93,6 +93,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   onQueryByCategory(category: string)
   {
+
     this.tickets$ = this.ticketService.filterByCategory(category);
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
   }
