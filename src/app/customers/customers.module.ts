@@ -1,6 +1,6 @@
-import {  HttpClientModule } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import {  FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { SharedModule } from '../shared/shared.module';
 import { TicketsModule } from '../tickets/tickets.module';
 import { CustomerDetailsEditComponent } from './customer-details/customer-details-edit/customer-details-edit.component';

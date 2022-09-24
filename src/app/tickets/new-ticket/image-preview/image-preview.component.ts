@@ -1,13 +1,15 @@
-import { ChangeDetectionStrategy, Component,  EventEmitter,  Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-image-preview',
   templateUrl: './image-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImagePreviewComponent  {
+export class ImagePreviewComponent 
+{
 
   @Output() file = new EventEmitter<File>();
+
   selectedFile: File;
   imageSrc: string;
   isValidImageFormat = true;

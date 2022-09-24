@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 
+
 @Component({
   selector: 'app-status-filter',
   templateUrl: './status-filter.component.html',
@@ -8,7 +9,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class StatusFilterComponent 
 {
-  statusOpt = [environment.ticketStatus.open, environment.ticketStatus.closed, environment.ticketStatus.all];
+   statusOpt = [environment.ticketStatus.open, environment.ticketStatus.closed, environment.ticketStatus.all];
 
   @Output('status') status = new EventEmitter<string>();
 

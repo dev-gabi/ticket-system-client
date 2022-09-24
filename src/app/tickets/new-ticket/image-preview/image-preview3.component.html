@@ -1,0 +1,12 @@
+<form [formGroup]="form">
+  Attach image:
+  <input style="display: none"
+         type="file" (change)="onFileChanged($event)"
+          formControlName="imageFile"
+         #fileInput>
+  <button (click)="fileInput.click()" type="button" class="button-secondary font-weight-bold">Select File</button>
+  <img [src]="imageSrc" *ngIf="imageSrc" class="img-fluid" />
+
+  <button (click)="onRemoveFile()" type="button" *ngIf="imageSrc" class="button-secondary font-weight-bold">Remove file</button>
+</form>
+<app-alert *ngIf="!isValidImageFormat" [message]="validFormatsMessage" (close)="onCloseAlert()"></app-alert>

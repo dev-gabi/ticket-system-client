@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable, Subscribable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
@@ -20,7 +20,8 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     private authService: AuthService, private ticketsQuery: TicketsQuery, private cdr: ChangeDetectorRef)
   { super(); }
 
-  tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll();
+  tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll().pipe(takeUntil(this.destroy$));
+
   error$: Observable<string>;
   isCustomer: boolean;
   pageOfTickets$: Observable<any>;
@@ -36,7 +37,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     this.checkIfOpenTicketsLoaded();
     this.error$ = this.ticketService.error$;
    
-   // this.subscribeTypeAheadTickets();
+    this.subscribeTypeAheadTickets();
  
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
   }
@@ -85,10 +86,10 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
       this.tickets$ = this.ticketService.filterByStatus(status);
     }
     else {
-      this.tickets$ = this.ticketService.filterByStatus(status);
+      this.tickets$ = this.ticketService.filterByStatus(status);    
     }
-
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
+   
   }
 
   onQueryByCategory(category: string)

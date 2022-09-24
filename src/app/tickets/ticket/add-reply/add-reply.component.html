@@ -1,0 +1,37 @@
+<div>
+  <form [formGroup]="form" (ngSubmit)="onAddReply()" class="row" *ngIf="ticket.status===open">
+    <div class="col-md-3"> &nbsp;</div>
+    <div class="col-md-5">
+      <h5>Add a reply</h5>
+
+      <textarea type="text"
+                formControlName="message"
+                rows="10"
+                class="rounded w-100"></textarea><br />
+      <span *ngIf="form.get('message').invalid && form.get('message').touched" class="danger w-100 d-block">
+        <span *ngIf="form.get('message').errors?.required">
+          Please fill in your message
+        </span>
+        <span *ngIf="form.get('message').errors?.minlength">Message should contain at least 5 charectars</span>
+      </span>
+
+      <span *ngIf="!isCustomer">
+        Set as Inner documentation: <input type="checkbox" formControlName="isInnerReply"  />
+      </span>
+
+    </div>
+    <div class="col-md-2">
+      <app-image-preview formControlName="imageFile"></app-image-preview>
+    </div>
+    <div class="col-12">
+      <br />
+      <button type="submit"
+              class="button d-inline-block mr-2" [disabled]="form.invalid" [allowSubmit]="form.valid">
+        Add a reply
+      </button>
+      <a routerLink="/customers/tickets"
+         class="button d-inline-block bg-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+<app-confirm-dialog *ngIf="isConfirmDialogOpen" [question]="'Discard new reply?'" (isConfirmed)="onConfirm($event)"></app-confirm-dialog>

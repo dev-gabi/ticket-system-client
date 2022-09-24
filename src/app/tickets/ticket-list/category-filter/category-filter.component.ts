@@ -22,7 +22,7 @@ export class CategoryFilterComponent extends DestroyPolicy
 
   @Output('category') category = new EventEmitter<string>();
   selectAll = environment.ticketStatus.all;
-  categories$:Observable<Category[]> = this.categoriesQuery.selectAll();
+  categories$: Observable<Category[]> = this.categoriesQuery.selectAll();
 
   ngOnInit()
   {

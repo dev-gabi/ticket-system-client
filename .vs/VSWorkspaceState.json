@@ -3,13 +3,12 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\tickets",
-    "\\src\\app\\tickets\\models",
-    "\\src\\app\\tickets\\ticket",
+    "\\src\\app\\customers\\customer-details",
+    "\\src\\app\\customers\\customer-details\\customer-details-edit",
     "\\src\\app\\tickets\\ticket-list",
-    "\\src\\app\\tickets\\ticket-list\\category-filter",
-    "\\src\\environments"
+    "\\src\\app\\tickets\\ticket\\add-reply",
+    "\\src\\app\\tickets\\ticket\\ticket-reply"
   ],
-  "SelectedNode": "\\src\\app\\tickets\\ticket-list\\category-filter\\category-filter.component.ts",
+  "SelectedNode": "\\src\\todo.txt",
   "PreviewInSolutionExplorer": true
 }

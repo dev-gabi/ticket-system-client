@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormGroup, NgForm } from '@angular/forms';
 import { ActivatedRouteSnapshot, CanDeactivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { AuthQuery } from '../store/auth.query';
@@ -36,5 +36,5 @@ export interface CanFormDeactivate
   confirmSubject: Subject<boolean>;
   isSaved: boolean;
   isConfirmDialogOpen: boolean;
-  form: NgForm;
+  form: NgForm | FormGroup;
 }

@@ -6,7 +6,7 @@ import { CategoriesState } from './categories-state.model';
 @Injectable({
   providedIn: 'root'
 })
-@StoreConfig({ name: 'categories' })
+  @StoreConfig({ name: 'categories', idKey:'name' })
 export class CategoriesStore extends EntityStore<CategoriesState>{
 
     constructor()

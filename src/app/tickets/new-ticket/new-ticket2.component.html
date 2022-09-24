@@ -1,0 +1,63 @@
+<div class="c-component text-center fade-in mt-4">
+  <h2>New Support Ticket</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-md-3">
+        <span *ngIf="form.get('title').touched" [labelValidation]="form.get('title').valid"></span>
+        <label>Title</label>
+      </div>
+      <div class="col-md-5">
+        <input formControlName="title" class="border w-100" /><br />
+          <span *ngIf="form.get('title').invalid && form.get('title').touched" class="danger w-100 d-block">
+            <span *ngIf="form.get('title').errors?.required"> Please fill in the title</span>
+            <span *ngIf="form.get('title').errors?.minlength"> The title should be at least 4 charectars</span>
+            <span *ngIf="form.get('title').errors?.maxlength"> The title should be no more than 30 charectars</span>
+          </span>
+      </div>
+    </div>
+    <br />
+    <div class="row">
+      <div class="col-md-3">
+        <span *ngIf="form.get('message').touched" [labelValidation]="form.get('message').valid"></span>
+        <label>Message</label>
+      </div>
+      <div class="col-md-5">
+        <textarea type="text"
+                  formControlName="message"
+                  rows="10"
+                  class="rounded w-100"></textarea><br />
+        <span *ngIf="form.get('message').invalid && form.get('message').touched" class="danger w-100 d-block">
+          <span *ngIf="form.get('message').errors?.required">
+            Please fill in your message
+          </span>
+          <span *ngIf="form.get('message').errors?.minlength">Message should contain at least 5 charectars</span>
+        </span>
+      </div>
+      <div class="col-md-2">
+        <app-image-preview formControlName="imageFile"></app-image-preview>
+      </div>
+    </div>
+    <br />
+    <div class="row" *ngIf="categories$ | async as categories">
+      <div class="col-md-3">
+        <span *ngIf="form.get('category').touched" [labelValidation]="form.get('category').valid"></span>
+        <label>Category</label>
+      </div>
+      <div class="col-md-5 ">
+        <select  formControlName="category" class="border w-100">
+          <option *ngFor="let category of categories" value="{{category.name}}">{{category.name}}</option>
+        </select>
+        <span *ngIf="form.get('category').invalid && form.get('category').touched" class="danger  w-100 d-block">
+          <span *ngIf="form.get('category').errors?.required"> Please select a category</span>
+        </span>
+      </div>
+    </div><br />
+    <button type="submit" [disabled]="form.invalid" class="button d-inline-block mr-2" [allowSubmit]="form.valid"> Submit </button>
+    <a routerLink="/customers/tickets"
+       class="button d-inline-block bg-secondary">Cancel</a>
+    <br />
+  </form>
+
+</div>
+<app-confirm-dialog *ngIf="isConfirmDialogOpen" [question]="'Discard new ticket?'" (isConfirmed)="onConfirm($event)"></app-confirm-dialog>
+<app-alert *ngIf="(error$ | async) as error" [message]="error" (close)="onCloseAlert()"></app-alert>

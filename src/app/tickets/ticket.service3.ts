@@ -39,7 +39,7 @@ export class TicketService3 extends BaseService
    * @param role
    * @param ticketStatus
    */
-  fetchTickets(role: string, ticketStatus: string): Observable<TicketResponse[]>
+  fetchTickets(role: string, ticketStatus: string)/*: Observable<TicketResponse[]>*/
   {
     if (role === environment.roles.customer) {
       return this.getTicketsByUserId(ticketStatus);
@@ -74,7 +74,9 @@ export class TicketService3 extends BaseService
         catchError(this.handleHttpError),
         tap(tickets =>
         {
-          status == environment.ticketStatus.open ? this.ticketStore.setTickets(tickets) : this.ticketStore.addClosedTickets(tickets);
+          status == environment.ticketStatus.open ?
+            this.ticketStore.setTickets(tickets) :
+            this.ticketStore.addClosedTickets(tickets);
         }));
   }
 
