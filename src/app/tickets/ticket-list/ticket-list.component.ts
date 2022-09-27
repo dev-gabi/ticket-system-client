@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
+import { Observable, Subscribable, Subscription } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { DestroyPolicy } from '../../utils/destroy-policy';
@@ -20,10 +20,11 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     private authService: AuthService, private ticketsQuery: TicketsQuery, private cdr: ChangeDetectorRef)
   { super(); }
 
-  tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll().pipe(takeUntil(this.destroy$));
+  tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll();//.pipe(takeUntil(this.destroy$));
   error$: Observable<string>;
   isCustomer: boolean;
   pageOfTickets$: Observable<any>;
+  closedSub: Subscription;
   customerRole = environment.roles.customer;
   userRole: string;
   isClosedTicketsFetched = false;
@@ -69,7 +70,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   checkIfClosedTicketsLoaded(status: string)
   {
-    this.ticketsQuery.selectedIsClosedTicketsLoaded$.pipe(
+    this.closedSub = this.ticketsQuery.selectedIsClosedTicketsLoaded$.pipe(
       filter(isLoaded => { return !isLoaded }),
       switchMap((isLoaded) =>
       {
@@ -86,6 +87,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   /**
  * if status!= 'open'
+ * subscribe to isClosedTicketsLoaded$ in tickets query.
  * fetch closed tickets from server and add them to the store.
  * returns tickets with selected status.
  */
@@ -110,7 +112,12 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   reFetchTickets()
   {
-    this.ticketService.reFetchTickets(this.userRole);
+    if (this.closedSub) {
+      this.closedSub.unsubscribe();
+    }
+
+    this.ticketService.clearTicketsStore();
+    this.isClosedTicketsFetched = false;
     this.onQueryByStatus(environment.ticketStatus.open);
   }
 

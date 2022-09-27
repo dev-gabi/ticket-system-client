@@ -49,10 +49,9 @@ export class TicketService3 extends BaseService
     }
   }
 
-  reFetchTickets(role: string)
+  clearTicketsStore()
   {
-    this.ticketStore.resetIsLoadedProperties();
-    return this.fetchTickets(role, environment.ticketStatus.open);
+    this.ticketStore.clearTickets();
   }
   private getTicketsByUserId(status:string)
   {
