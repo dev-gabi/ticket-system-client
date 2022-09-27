@@ -48,3 +48,6 @@ Thumbs.db
 #gabi
 **/old-git
 environment.prod.ts
+
+#angular cache
+.angular/cache

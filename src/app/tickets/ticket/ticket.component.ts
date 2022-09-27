@@ -39,6 +39,7 @@ export class TicketComponent extends DestroyPolicy implements OnInit
       switchMap((params: Params) =>
       {
         this.ticketId = +params['id'];
+
         return this.ticketService.setActiveTicket(this.ticketId);
       }),
       takeUntil(this.destroy$)

@@ -16,18 +16,17 @@ import { TicketService3 } from '../ticket.service3';
 })
 export class TicketListComponent extends DestroyPolicy implements OnInit
 {
-  constructor(private ticketService: TicketService3, 
+  constructor(private ticketService: TicketService3,
     private authService: AuthService, private ticketsQuery: TicketsQuery, private cdr: ChangeDetectorRef)
   { super(); }
 
   tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll().pipe(takeUntil(this.destroy$));
-
   error$: Observable<string>;
   isCustomer: boolean;
   pageOfTickets$: Observable<any>;
   customerRole = environment.roles.customer;
   userRole: string;
-
+  isClosedTicketsFetched = false;
 
   ngOnInit()
   {
@@ -36,9 +35,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     this.isCustomer = this.userRole === this.customerRole;
     this.checkIfOpenTicketsLoaded();
     this.error$ = this.ticketService.error$;
-   
     this.subscribeTypeAheadTickets();
- 
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
   }
 
@@ -49,7 +46,6 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
         tickets$ =>
         {
           this.tickets$ = tickets$;
-          this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
           this.cdr.detectChanges();
         }
       );
@@ -57,39 +53,52 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   checkIfOpenTicketsLoaded()
   {
-     this.ticketsQuery.selectedIsOpenTicketsLoaded$.pipe(     
-      filter(isLoaded => { return !isLoaded }),     
-      switchMap((isLoaded) =>
-      {
-        return this.ticketService.fetchTickets(this.userRole, environment.ticketStatus.open)
-      }),
-      takeUntil(this.destroy$),
-    ).subscribe();
-  }
-  /**
-   * if status!= 'open'
-   * fetch closed tickets from server and add them to the store.
-   * returns tickets with selected status.
-   */
-  onQueryByStatus(status:string)
-  { 
-    if (status != environment.ticketStatus.open) {
-      this.ticketsQuery.selectedIsClosedTicketsLoaded$.pipe(
+    if (this.ticketsQuery.selectedIsOpenTicketsLoaded$) {
+      this.ticketsQuery.selectedIsOpenTicketsLoaded$.pipe(
         filter(isLoaded => { return !isLoaded }),
         switchMap((isLoaded) =>
         {
-          return this.ticketService.fetchTickets(this.userRole, environment.ticketStatus.closed)
+          return this.ticketService.fetchTickets(this.userRole, environment.ticketStatus.open)
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$),
       ).subscribe();
+    }
 
+  }
+
+
+  checkIfClosedTicketsLoaded(status: string)
+  {
+    this.ticketsQuery.selectedIsClosedTicketsLoaded$.pipe(
+      filter(isLoaded => { return !isLoaded }),
+      switchMap((isLoaded) =>
+      {
+        return this.ticketService.fetchTickets(this.userRole, environment.ticketStatus.closed)
+      }),
+      takeUntil(this.destroy$)
+    ).subscribe(() =>
+    {
+      this.isClosedTicketsFetched = true;
       this.tickets$ = this.ticketService.filterByStatus(status);
+      this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
+    });
+  }
+
+  /**
+ * if status!= 'open'
+ * fetch closed tickets from server and add them to the store.
+ * returns tickets with selected status.
+ */
+  onQueryByStatus(status: string)
+  {
+    if (status != environment.ticketStatus.open && !this.isClosedTicketsFetched) {
+      this.checkIfClosedTicketsLoaded(status);
     }
     else {
-      this.tickets$ = this.ticketService.filterByStatus(status);    
+      this.tickets$ = this.ticketService.filterByStatus(status);
+      this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
     }
-    this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
-   
+ 
   }
 
   onQueryByCategory(category: string)
@@ -102,13 +111,13 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   reFetchTickets()
   {
     this.ticketService.reFetchTickets(this.userRole);
-    this.onQueryByStatus(environment.ticketStatus.open);  
+    this.onQueryByStatus(environment.ticketStatus.open);
   }
 
 
   onChangePage(pageOfTickets: Observable<any>)
   {
-    this.pageOfTickets$ = pageOfTickets;   
+    this.pageOfTickets$ = pageOfTickets;
   }
 
   onCloseAlert()

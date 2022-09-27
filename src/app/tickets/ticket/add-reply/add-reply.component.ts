@@ -1,9 +1,8 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import { NgForm, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
-import { AuthService } from '../../../auth/auth.service';
 import { CanFormDeactivate } from '../../../auth/guards/form-deactivate.guard';
 import { DestroyPolicy } from '../../../utils/destroy-policy';
 import { Ticket } from '../../models/ticket.model';
@@ -11,7 +10,8 @@ import { TicketService3 } from '../../ticket.service3';
 
 @Component({
   selector: 'app-add-reply',
-  templateUrl: './add-reply.component.html'
+  templateUrl: './add-reply.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AddReplyComponent extends DestroyPolicy implements OnInit, CanFormDeactivate
 {

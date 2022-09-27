@@ -25,10 +25,11 @@ export class JwPaginationComponent extends DestroyPolicy implements OnChanges
 
   ngOnInit()
   {
-    this.initSub = this.items$
+    this.items$.pipe(
+      takeUntil(this.destroy$))
       .subscribe(
         items =>
-        {     
+        {
           if (items.length) {
             this.setPage(this.initialPage);
           }      

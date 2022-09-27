@@ -9,7 +9,7 @@ import { TicketsStore } from './tickets-store';
 })
 @QueryConfig({
   sortBy: 'openDate',
-  sortByOrder: Order.ASC
+  sortByOrder: Order.ASC 
 })
 export class TicketsQuery extends QueryEntity<TicketsState>{
   constructor(protected store: TicketsStore)

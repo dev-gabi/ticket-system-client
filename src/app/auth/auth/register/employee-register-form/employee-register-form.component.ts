@@ -24,14 +24,15 @@ export class EmployeeRegisterFormComponent extends RegisterForm
     registerModel = this.setRegisterModelFullProps(registerModel);
 
     this.authService.employeeRegister(registerModel)
-      .pipe(
-        finalize(() => this.resetForm()),
+      .pipe(       
         takeUntil(this.destroy$))
       .subscribe(
         response =>
         {
+          this.isLoading = false;
           this.checkEmail = true;
-        }
+        },
+        error => this.isLoading
       );
   }
 

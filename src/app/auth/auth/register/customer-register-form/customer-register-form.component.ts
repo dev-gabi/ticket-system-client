@@ -18,13 +18,15 @@ export class CustomerRegisterFormComponent extends RegisterForm
     this.isLoading = true;
     this.authService.customerRegister(registerModel)
       .pipe(
-        finalize(() => this.resetForm()),
         takeUntil(this.destroy$))
       .subscribe(
         response =>
         {
           this.checkEmail = true;
-        }
+          this.isLoading = false;
+        },
+        error => this.isLoading = false
+         
       );
   }
 

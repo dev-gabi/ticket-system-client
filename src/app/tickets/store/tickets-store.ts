@@ -31,6 +31,11 @@ export class TicketsStore extends EntityStore<TicketsState>{
   clearTickets()
   {    
     this.reset();
+    this.resetIsLoadedProperties();
+  }
+
+  resetIsLoadedProperties()
+  {
     this.update(state => ({
       ...state,
       isOpenTicketsLoaded: false,

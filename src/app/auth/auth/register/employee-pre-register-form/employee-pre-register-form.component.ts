@@ -25,12 +25,13 @@ export class EmployeePreRegisterFormComponent extends RegisterForm
     this.isLoading = true;
     this.authService.preRegisterEmployee(registerModel)
       .pipe(
-        finalize(() => this.resetForm()),
         takeUntil(this.destroy$))
       .subscribe(response =>
       {
         this.message = response.message;
-      });
+        this.isLoading = false;
+      },
+        error => this.isLoading = false);
   }
 
   onCloseAlert()
@@ -38,10 +39,5 @@ export class EmployeePreRegisterFormComponent extends RegisterForm
     this.authService.clearError();
   }
 
-  resetForm()
-  {
-    this.form.reset();
-    this.isLoading = false;
-    this.cdr.markForCheck();
-  }
+
 }

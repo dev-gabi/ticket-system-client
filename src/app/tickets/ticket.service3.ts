@@ -5,6 +5,7 @@ import { catchError, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { BaseService } from '../utils/base-service';
+import { GetTicketsByStatus } from './models/get-tickets-by-status.model';
 import { GetTicketsByUser } from './models/get-tickets-by-user.model';
 import { ReplyImage } from './models/reply-image.model';
 import { ReplyResponse } from './models/response/reply-response.model';
@@ -39,7 +40,7 @@ export class TicketService3 extends BaseService
    * @param role
    * @param ticketStatus
    */
-  fetchTickets(role: string, ticketStatus: string)/*: Observable<TicketResponse[]>*/
+  fetchTickets(role: string, ticketStatus: string)
   {
     if (role === environment.roles.customer) {
       return this.getTicketsByUserId(ticketStatus);
@@ -50,13 +51,11 @@ export class TicketService3 extends BaseService
 
   reFetchTickets(role: string)
   {
-
-    this.ticketStore.clearTickets();
+    this.ticketStore.resetIsLoadedProperties();
     return this.fetchTickets(role, environment.ticketStatus.open);
   }
   private getTicketsByUserId(status:string)
   {
-
     const payloadReq: GetTicketsByUser = { id: this.userId, status: status }
     return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getByUserId, payloadReq).pipe(
       catchError(this.handleHttpError),
@@ -69,11 +68,11 @@ export class TicketService3 extends BaseService
 
   private getTicketsByStatus(status: string)
   {
-    return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getTickets, { status: status })
+    return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getTickets, {status:status})
       .pipe(
         catchError(this.handleHttpError),
         tap(tickets =>
-        {
+        {    
           status == environment.ticketStatus.open ?
             this.ticketStore.setTickets(tickets) :
             this.ticketStore.addClosedTickets(tickets);

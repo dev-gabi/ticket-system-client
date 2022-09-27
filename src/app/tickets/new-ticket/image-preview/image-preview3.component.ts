@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from 
 
 @Component({
   selector: 'app-image-preview',
-  templateUrl: './image-preview.component.html',
+  templateUrl: './image-preview3.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {

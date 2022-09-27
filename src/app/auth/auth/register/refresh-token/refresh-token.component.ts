@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { DestroyPolicy } from '../../../../utils/destroy-policy';
 import { AuthService } from '../../../auth.service';
 
@@ -25,22 +24,24 @@ export class RefreshTokenComponent extends DestroyPolicy
 
     this.isLoading = true;
     this.authService.refreshRegistrationToken(email).pipe(
-      finalize(() =>
-      {
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      }),
       takeUntil(this.destroy$)
     ).subscribe(
       response =>
       {
         this.message = response.message;
         this.form.reset();
-      })
+        this.hideLoadingIndicator();
+      }, error => this.hideLoadingIndicator()
+    )
   }
 
   onCloseAlert()
   {
     this.authService.clearError();
+  }
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 }

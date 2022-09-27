@@ -24,24 +24,25 @@ export class ResendEmailConfirmationComponent extends DestroyPolicy
     this.isLoading = true;
     this.cdr.markForCheck();
     this.authService.resendConfirmationEmail(email).pipe(
-      finalize(() =>
-      {
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      }),
       takeUntil(this.destroy$)
     ).subscribe(
       response =>
       {
-          this.message = response.message;
-          this.form.reset();
-      }
+        this.message = response.message;
+        this.form.reset();
+        this.hideLoadingIndicator();
+      },
+      error => this.hideLoadingIndicator()
     );
   }
   onCloseAlert()
   {
     this.authService.clearError();
   }
-
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
+  }
 
 }

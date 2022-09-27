@@ -35,20 +35,20 @@ export class ResetPasswordComponent extends DestroyPolicy implements OnInit
         this.userId = params["id"];
         return this.authService.validateRegistrationToken(this.resetToken, params["email"])
       }),
-      finalize(() => { this.cdr.markForCheck();}),
+      finalize(() => { }),
       takeUntil(this.destroy$),
-    ).subscribe(              
-          (isValid: boolean) =>
+    ).subscribe(
+      (isValid: boolean) =>
       {
-            if (!isValid) {
-              this.message = "Token was expired. \n contact your admin to get a new registation email.";
-       
-            }
-          }
-        );
+        if (!isValid) {
+          this.message = "Token was expired. \n contact your admin to get a new registation email.";
+        }
+        this.cdr.markForCheck();
+      }
+    );
 
   }
-  onSubmit(formData:{newPassword:string, confirmPassword:string})
+  onSubmit(formData: { newPassword: string, confirmPassword: string })
   {
     this.isLoading = true;
     this.form.reset();
@@ -62,18 +62,15 @@ export class ResetPasswordComponent extends DestroyPolicy implements OnInit
     };
 
     this.authService.resetPassword(resetPasswordData).pipe(
-      finalize(() =>
-      {
-        this.isLoading = false;
-        this.cdr.markForCheck();
-      }),
       takeUntil(this.destroy$)
     ).subscribe(
       response =>
       {
-          this.message = response.message;
-          this.isSuccess = true;
-      }
+        this.message = response.message;
+        this.isSuccess = true;
+        this.hideLoadingIndicator();
+      },
+      error => this.hideLoadingIndicator()
     );
   }
 
@@ -89,5 +86,11 @@ export class ResetPasswordComponent extends DestroyPolicy implements OnInit
   onCloseAlert()
   {
     this.authService.clearError();
+  }
+
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 }

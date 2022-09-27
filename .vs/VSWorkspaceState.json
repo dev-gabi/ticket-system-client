@@ -3,12 +3,14 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\customers\\customer-details",
-    "\\src\\app\\customers\\customer-details\\customer-details-edit",
-    "\\src\\app\\tickets\\ticket-list",
-    "\\src\\app\\tickets\\ticket\\add-reply",
-    "\\src\\app\\tickets\\ticket\\ticket-reply"
+    "\\src\\app\\auth",
+    "\\src\\app\\auth\\auth",
+    "\\src\\app\\auth\\auth\\register",
+    "\\src\\app\\auth\\auth\\register\\resend-email-confirmation",
+    "\\src\\app\\auth\\auth\\reset-password",
+    "\\src\\app\\tickets\\store",
+    "\\src\\app\\utils"
   ],
-  "SelectedNode": "\\src\\todo.txt",
+  "SelectedNode": "\\src\\app\\auth\\auth\\reset-password\\reset-password.component.ts",
   "PreviewInSolutionExplorer": true
 }
