@@ -1,8 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { finalize, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
-import { DestroyPolicy } from '../../../../utils/destroy-policy';
 import { AuthService } from '../../../auth.service';
 import { EmployeePreRegisterModel } from '../../../models/employee-pre-register.model';
 import { RegisterForm } from '../register-form';
@@ -15,7 +14,7 @@ export class EmployeePreRegisterFormComponent extends RegisterForm
 {
 
   constructor(protected authService: AuthService, protected cdr: ChangeDetectorRef) { super(authService, cdr); }
-
+  @ViewChild('registerForm') form: NgForm;
   message: string = null;
   employeeRoles = [environment.roles.admin, environment.roles.supporter];
 
@@ -29,15 +28,20 @@ export class EmployeePreRegisterFormComponent extends RegisterForm
       .subscribe(response =>
       {
         this.message = response.message;
-        this.isLoading = false;
+        this.form.reset();
+        this.hideLoadingIndicator();
       },
-        error => this.isLoading = false);
+        error => this.hideLoadingIndicator());
   }
 
   onCloseAlert()
   {
     this.authService.clearError();
   }
-
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
+  }
 
 }

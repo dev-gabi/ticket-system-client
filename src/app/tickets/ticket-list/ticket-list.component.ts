@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable, Subscribable, Subscription } from 'rxjs';
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
 import { DestroyPolicy } from '../../utils/destroy-policy';
@@ -20,24 +20,37 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     private authService: AuthService, private ticketsQuery: TicketsQuery, private cdr: ChangeDetectorRef)
   { super(); }
 
-  tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll();//.pipe(takeUntil(this.destroy$));
+  tickets$: Observable<Ticket[]> = this.ticketsQuery.selectAll();
   error$: Observable<string>;
   isCustomer: boolean;
   pageOfTickets$: Observable<any>;
   closedSub: Subscription;
   customerRole = environment.roles.customer;
   userRole: string;
-  isClosedTicketsFetched = false;
+  isClosedTicketsFetched: boolean;
 
   ngOnInit()
   {
     this.ticketService.setUserId();
     this.userRole = this.authService.getLoggedInUser().role;
     this.isCustomer = this.userRole === this.customerRole;
-    this.checkIfOpenTicketsLoaded();
+    this.setSubscriptions();
+    this.onQueryByStatus(environment.ticketStatus.open);
     this.error$ = this.ticketService.error$;
+  }
+
+  setSubscriptions()
+  {
+    this.subscribeAndLoadOpenTickets();
+    this.subscribeCheckIsClosedTicketsLoaded();
     this.subscribeTypeAheadTickets();
-    this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
+  }
+
+  subscribeCheckIsClosedTicketsLoaded()
+  {
+    this.ticketsQuery.selectedIsClosedTicketsLoaded$.pipe(takeUntil(this.destroy$)).subscribe(
+      isClosedTicketsLoaded => this.isClosedTicketsFetched = isClosedTicketsLoaded
+    );
   }
 
   subscribeTypeAheadTickets()
@@ -52,7 +65,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
       );
   }
 
-  checkIfOpenTicketsLoaded()
+  subscribeAndLoadOpenTickets()
   {
     if (this.ticketsQuery.selectedIsOpenTicketsLoaded$) {
       this.ticketsQuery.selectedIsOpenTicketsLoaded$.pipe(
@@ -67,8 +80,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   }
 
-
-  checkIfClosedTicketsLoaded(status: string)
+  subscribeAndLoadClosedTickets(status: string)
   {
     this.closedSub = this.ticketsQuery.selectedIsClosedTicketsLoaded$.pipe(
       filter(isLoaded => { return !isLoaded }),
@@ -94,18 +106,17 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   onQueryByStatus(status: string)
   {
     if (status != environment.ticketStatus.open && !this.isClosedTicketsFetched) {
-      this.checkIfClosedTicketsLoaded(status);
+      this.subscribeAndLoadClosedTickets(status);
     }
     else {
+ 
       this.tickets$ = this.ticketService.filterByStatus(status);
       this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
     }
- 
   }
 
   onQueryByCategory(category: string)
   {
-
     this.tickets$ = this.ticketService.filterByCategory(category);
     this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
   }
@@ -115,12 +126,10 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     if (this.closedSub) {
       this.closedSub.unsubscribe();
     }
-
     this.ticketService.clearTicketsStore();
     this.isClosedTicketsFetched = false;
     this.onQueryByStatus(environment.ticketStatus.open);
   }
-
 
   onChangePage(pageOfTickets: Observable<any>)
   {
@@ -131,5 +140,4 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   {
     this.ticketService.clearError();
   }
-
 }

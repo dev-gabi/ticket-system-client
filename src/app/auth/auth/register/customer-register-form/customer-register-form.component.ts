@@ -23,9 +23,9 @@ export class CustomerRegisterFormComponent extends RegisterForm
         response =>
         {
           this.checkEmail = true;
-          this.isLoading = false;
+          this.hideLoadingIndicator();
         },
-        error => this.isLoading = false
+        error => this.hideLoadingIndicator()
          
       );
   }
@@ -33,5 +33,11 @@ export class CustomerRegisterFormComponent extends RegisterForm
   onSendConfirmationEmail()
   {
     this.router.navigate(['/auth/register/resend-email']);
+  }
+
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 }

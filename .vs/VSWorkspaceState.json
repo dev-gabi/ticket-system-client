@@ -3,14 +3,9 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\auth",
-    "\\src\\app\\auth\\auth",
-    "\\src\\app\\auth\\auth\\register",
-    "\\src\\app\\auth\\auth\\register\\resend-email-confirmation",
-    "\\src\\app\\auth\\auth\\reset-password",
-    "\\src\\app\\tickets\\store",
-    "\\src\\app\\utils"
+    "\\src\\app\\tickets",
+    "\\src\\app\\tickets\\ticket-list"
   ],
-  "SelectedNode": "\\src\\app\\auth\\auth\\reset-password\\reset-password.component.ts",
+  "SelectedNode": "\\src\\app\\tickets\\ticket-list\\ticket-list.component.ts",
   "PreviewInSolutionExplorer": true
 }

@@ -1,3 +1,2 @@
 
 
-one open status ticket appears when filtering by closed

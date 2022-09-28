@@ -20,16 +20,19 @@ export class SeedTicketsComponent implements OnInit {
     this.isLoading = true;
     this.http.get(environment.endpoints.tickets.seedTickets).subscribe(res =>
     {
-      this.isLoading = false;
       this.message = "Tickets created";
-      this.cdr.markForCheck();
+      this.hideLoadingIndicator();
     },
       error =>
       {
-        this.isLoading = false;
         this.message = "An error has occured";
-        this.cdr.markForCheck();
+        this.hideLoadingIndicator();
       })
   }
 
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
+  }
 }

@@ -29,10 +29,10 @@ export class EmployeeRegisterFormComponent extends RegisterForm
       .subscribe(
         response =>
         {
-          this.isLoading = false;
+          this.hideLoadingIndicator();
           this.checkEmail = true;
         },
-        error => this.isLoading
+        error => this.hideLoadingIndicator()
       );
   }
 
@@ -42,5 +42,11 @@ export class EmployeeRegisterFormComponent extends RegisterForm
     registerModel.email = this.employeeRegisterFormProps.employeePreRegisterCorporateEmail;
     registerModel.userName = this.employeeRegisterFormProps.employeePreRegisterUserName;
     return registerModel;
+  }
+
+  hideLoadingIndicator()
+  {
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 }
