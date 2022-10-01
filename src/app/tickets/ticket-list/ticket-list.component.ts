@@ -1,5 +1,6 @@
+/*
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../auth/auth.service';
@@ -55,7 +56,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   subscribeTypeAheadTickets()
   {
-    this.ticketService.typeAheadTickets$.pipe(
+    this.ticketService.filteredTickets$.pipe(
       takeUntil(this.destroy$)).subscribe(
         tickets$ =>
         {
@@ -96,13 +97,14 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
       this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
     });
   }
-
+  */
   /**
  * if status!= 'open'
  * subscribe to isClosedTicketsLoaded$ in tickets query.
  * fetch closed tickets from server and add them to the store.
  * returns tickets with selected status.
  */
+/*
   onQueryByStatus(status: string)
   {
     if (status != environment.ticketStatus.open && !this.isClosedTicketsFetched) {
@@ -115,11 +117,6 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     }
   }
 
-  onQueryByCategory(category: string)
-  {
-    this.tickets$ = this.ticketService.filterByCategory(category);
-    this.onChangePage(this.tickets$.pipe(map(tickets => tickets.slice(0, 10))));
-  }
 
   reFetchTickets()
   {
@@ -141,3 +138,4 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
     this.ticketService.clearError();
   }
 }
+*/

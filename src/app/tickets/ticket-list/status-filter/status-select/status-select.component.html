@@ -1,0 +1,4 @@
+<select class="search-ul p-0 center-text mb-0" #status (change)="onSelectStatus(status.value)">
+  <option *ngFor="let status of statusOpt">{{status}}</option>
+</select>
+<app-loading-spinner *ngIf="isLoading"></app-loading-spinner>

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import paginate from 'jw-paginate';
 import { Observable, of, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,15 +12,14 @@ import { DestroyPolicy } from '../../utils/destroy-policy';
 
 export class JwPaginationComponent extends DestroyPolicy implements OnChanges
 {
-  constructor() {super()}
+  constructor() { super() }
 
   @Output() changePage = new EventEmitter<Observable<any>>();
   @Input() initialPage = 1;
   @Input() pageSize = 10;
   @Input() maxPages = 10;
   @Input() items$: Observable<any>;
-  sub: Subscription;
-  initSub: Subscription;
+
   pager: any = {};
 
   ngOnInit()

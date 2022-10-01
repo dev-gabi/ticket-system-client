@@ -1,11 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { BaseService } from '../utils/base-service';
-import { GetTicketsByStatus } from './models/get-tickets-by-status.model';
 import { GetTicketsByUser } from './models/get-tickets-by-user.model';
 import { ReplyImage } from './models/reply-image.model';
 import { ReplyResponse } from './models/response/reply-response.model';
@@ -22,16 +21,17 @@ import { TicketsStore } from './store/tickets-store';
 export class TicketService3 extends BaseService
 {
   constructor(private authService: AuthService, private http: HttpClient,
-    private ticketStore: TicketsStore, private ticketsQuery: TicketsQuery) { super();}
+    private ticketStore: TicketsStore, private ticketsQuery: TicketsQuery) { super(); }
 
-  private typeAheadTickets = new Subject<Observable<Ticket[]>>();
-  typeAheadTickets$ = this.typeAheadTickets.asObservable();
+  private filteredTickets = new BehaviorSubject<Ticket[]>(null);
+  filteredTickets$ = this.filteredTickets.asObservable();
 
   private userId: string;
 
-  setUserId()
+  init()
   {
     this.userId = this.authService.getLoggedInUser().id;
+    this.filterByStatus(environment.ticketStatus.open);
   }
 
   /**
@@ -53,7 +53,7 @@ export class TicketService3 extends BaseService
   {
     this.ticketStore.clearTickets();
   }
-  private getTicketsByUserId(status:string)
+  private getTicketsByUserId(status: string)
   {
     const payloadReq: GetTicketsByUser = { id: this.userId, status: status }
     return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getByUserId, payloadReq).pipe(
@@ -67,11 +67,11 @@ export class TicketService3 extends BaseService
 
   private getTicketsByStatus(status: string)
   {
-    return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getTickets, {status:status})
+    return this.http.post<TicketResponse[]>(environment.endpoints.tickets.getTickets, { status: status })
       .pipe(
         catchError(this.handleHttpError),
         tap(tickets =>
-        {    
+        {
           status == environment.ticketStatus.open ?
             this.ticketStore.setTickets(tickets) :
             this.ticketStore.addClosedTickets(tickets);
@@ -87,35 +87,42 @@ export class TicketService3 extends BaseService
   filterByCategory(category: string)
   {
     if (category === environment.ticketStatus.all) {
-      return this.ticketsQuery.selectAll();
+      this.filteredTickets.next(
+        this.ticketsQuery.getAll()
+      )
     } else {
-      return this.ticketsQuery.selectAll({
-        filterBy: entity => entity.category === category
-      });
+      this.filteredTickets.next(
+        this.ticketsQuery.getAll({
+          filterBy: entity => entity.category === category
+        })
+      );
     }
   }
 
   filterByStatus(status: string)
   {
     if (status == environment.ticketStatus.all) {
-      return this.ticketsQuery.selectAll();
-    } else {
-      return this.ticketsQuery.selectAll({
-        filterBy: entity => entity.status === status
-      });
-    }
+      this.filteredTickets.next(
+        this.ticketsQuery.getAll()
+      );
 
+    } else {
+      this.filteredTickets.next(
+        this.ticketsQuery.getAll({
+          filterBy: entity => entity.status === status
+        }));
+    }
   }
 
   typeAheadFilterByCustomer(id: string)
   {
-    this.typeAheadTickets.next(this.ticketsQuery.selectAll({ filterBy: entity => entity.customerId === id }));   
+    this.filteredTickets.next(this.ticketsQuery.getAll({ filterBy: entity => entity.customerId === id }));
   }
 
   typeAheadFilterByContent(searchInput: string)
   {
     if (searchInput != null && searchInput.length > 1) {
-      let result$: Observable<Ticket[]> = this.ticketsQuery.selectAll({
+      let result$: Ticket[] = this.ticketsQuery.getAll({
         filterBy: entity =>
           entity.title.toLowerCase().indexOf(searchInput) != -1 ||
 
@@ -125,13 +132,12 @@ export class TicketService3 extends BaseService
           })
       });
 
-      this.typeAheadTickets.next(result$);
+      this.filteredTickets.next(result$);
     }
     else {
-      this.typeAheadTickets.next(this.ticketsQuery.selectAll());
+      this.filteredTickets.next(this.ticketsQuery.getAll());
     }
   }
-
   addReply(id: number, replyText: string, isInnerReply: boolean, image: File = null): Observable<Ticket>
   {
     const formData = this.createReplyFormData(id, replyText, isInnerReply, image);
@@ -160,25 +166,25 @@ export class TicketService3 extends BaseService
 
   private updateReplyLocally(response: ReplyResponse)
   {
-      let ticketToUpdate: Ticket = { ...this.ticketsQuery.getEntity(response.ticketId) };
-      let updatedReplies: TicketReply[] = [...ticketToUpdate.replies];
-      const ri: ReplyImage = { replyId: response.replyId, path: response.imagePath };
-      const tReply: TicketReply = {
-        id: response.replyId,
-        ticketId: response.ticketId,
-        userId: response.userId,
-        userName: response.userName,
-        message: response.message,
-        date: response.date,
-        isImageAttached: response.isImageAttached,
-        image: ri,
-        isInnerReply: response.isInnerReply
-      }
-      updatedReplies.push(tReply);
+    let ticketToUpdate: Ticket = { ...this.ticketsQuery.getEntity(response.ticketId) };
+    let updatedReplies: TicketReply[] = [...ticketToUpdate.replies];
+    const ri: ReplyImage = { replyId: response.replyId, path: response.imagePath };
+    const tReply: TicketReply = {
+      id: response.replyId,
+      ticketId: response.ticketId,
+      userId: response.userId,
+      userName: response.userName,
+      message: response.message,
+      date: response.date,
+      isImageAttached: response.isImageAttached,
+      image: ri,
+      isInnerReply: response.isInnerReply
+    }
+    updatedReplies.push(tReply);
 
-      ticketToUpdate.replies = updatedReplies;
-      this.ticketStore.update(response.ticketId, ticketToUpdate);
-      return of(ticketToUpdate);
+    ticketToUpdate.replies = updatedReplies;
+    this.ticketStore.update(response.ticketId, ticketToUpdate);
+    return of(ticketToUpdate);
   }
 
   closeTicket(id: number): Observable<Ticket> 
@@ -188,16 +194,23 @@ export class TicketService3 extends BaseService
       switchMap(ticketResponse =>
       {
         this.ticketStore.updateActive(ticketResponse);
+        this.updateClosedTicketInFilteredTickets(ticketResponse.id);
         return this.ticketsQuery.selectEntity(ticketResponse.id);
       }))
   }
-
+  private updateClosedTicketInFilteredTickets(id:number)
+  {
+    let filtered = this.filteredTickets.value;
+    const index = filtered.findIndex(t => t.id == id);
+    filtered[index] = this.ticketsQuery.getActive() as Ticket;
+    this.filteredTickets.next(filtered);
+  }
   addNew(request: { title: string, message: string, category: string, image: File }): Observable<Ticket>
   {
     const formData = this.createNewTicketFormData(request.title, request.message, request.category, request.image);
 
     return this.http.post<TicketResponse>(environment.endpoints.tickets.create, formData).pipe(
-      catchError(this.handleHttpError),   
+      catchError(this.handleHttpError),
       switchMap(response =>
       {
         const newTicket = this.createTicketFromResponse(response);
@@ -235,5 +248,4 @@ export class TicketService3 extends BaseService
     };
     return ticket;
   }
-
 }

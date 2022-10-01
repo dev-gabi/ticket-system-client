@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormBuilder, FormGroup, NG_VALUE_ACCESSOR } from 
 
 @Component({
   selector: 'app-image-preview',
-  templateUrl: './image-preview3.component.html',
+  templateUrl: './image-preview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [
     {
@@ -63,6 +63,7 @@ export class ImagePreviewComponent implements ControlValueAccessor
 
     } else {
       this.isValidImageFormat = false;
+      this.onRemoveFile();
     }
     this.onTouch();
     this.onChange(event.target.files[0]);

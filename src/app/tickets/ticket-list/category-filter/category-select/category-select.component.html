@@ -1,0 +1,3 @@
+<select class="search-ul mb-0" (change)="onSelectCategory(cat.value)" #cat>
+  <option *ngFor="let cat of categories" [selected]="cat.name == selectAll">{{cat.name}}</option>
+</select>

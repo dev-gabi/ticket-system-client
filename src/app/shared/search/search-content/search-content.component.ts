@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
-import { fromEvent, Subject } from 'rxjs';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
+import { fromEvent } from 'rxjs';
 import { map, takeUntil, tap } from 'rxjs/operators';
 import { TicketService3 } from '../../../tickets/ticket.service3';
+import { DestroyPolicy } from '../../../utils/destroy-policy';
 
 
 @Component({
@@ -9,16 +10,14 @@ import { TicketService3 } from '../../../tickets/ticket.service3';
   templateUrl: './search-content.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchContentComponent implements AfterViewInit, OnDestroy
+export class SearchContentComponent extends DestroyPolicy implements AfterViewInit
 {
 
-  constructor(private ticketService: TicketService3, private cdr: ChangeDetectorRef) { }
+  constructor(private ticketService: TicketService3, private cdr: ChangeDetectorRef) { super(); }
 
   @ViewChild('searchInput') searchInput: ElementRef;
-  
-  isLoading = false;
+
   clicks$ = fromEvent(document, 'click');
-  destroy$: Subject<boolean> = new Subject<boolean>();
 
   ngAfterViewInit()
   {
@@ -33,16 +32,7 @@ export class SearchContentComponent implements AfterViewInit, OnDestroy
        }),
       takeUntil(this.destroy$)
     ).
-      subscribe(() =>
-      {   this.isLoading = false;
-          this.cdr.detectChanges();
-        }
-      );
+      subscribe();
   }
 
-  ngOnDestroy(): void
-  {
-    this.destroy$.next(true);
-    this.destroy$.unsubscribe();
-  }
 }

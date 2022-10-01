@@ -1,7 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, Output } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs';
 import { filter, switchMap, takeUntil } from 'rxjs/operators';
-import { environment } from '../../../../environments/environment';
 import { DestroyPolicy } from '../../../utils/destroy-policy';
 import { CategoriesService } from '../../categories/categories.service';
 import { CategoriesQuery } from '../../categories/store/categories-query';
@@ -19,9 +18,6 @@ export class CategoryFilterComponent extends DestroyPolicy
   constructor(private categoriesQuery: CategoriesQuery,
     private categoriesService: CategoriesService) { super(); }
 
-
-  @Output('category') category = new EventEmitter<string>();
-  selectAll = environment.ticketStatus.all;
   categories$: Observable<Category[]> = this.categoriesQuery.selectAll();
 
   ngOnInit()
@@ -35,11 +31,6 @@ export class CategoryFilterComponent extends DestroyPolicy
       }),
       takeUntil(this.destroy$))
       .subscribe();
-  }
-
-  onSelectCategory(category: string)
-  {
-    this.category.emit(category);
   }
 
 }

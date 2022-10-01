@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -12,7 +12,7 @@ import { TicketService3 } from '../ticket.service3';
 
 @Component({
   selector: 'app-new-ticket',
-  templateUrl: './new-ticket2.component.html',
+  templateUrl: './new-ticket.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

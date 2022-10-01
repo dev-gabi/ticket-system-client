@@ -3,9 +3,14 @@
     "",
     "\\src",
     "\\src\\app",
+    "\\src\\app\\shared",
+    "\\src\\app\\shared\\loading-spinner",
+    "\\src\\app\\shared\\search\\search-user",
     "\\src\\app\\tickets",
-    "\\src\\app\\tickets\\ticket-list"
+    "\\src\\app\\tickets\\ticket-list",
+    "\\src\\app\\tickets\\ticket-list\\status-filter",
+    "\\src\\app\\tickets\\ticket-list\\status-filter\\status-select"
   ],
-  "SelectedNode": "\\src\\app\\tickets\\ticket-list\\ticket-list.component.ts",
+  "SelectedNode": "\\src\\app\\shared\\loading-spinner\\loading-spinner.component.html",
   "PreviewInSolutionExplorer": true
 }

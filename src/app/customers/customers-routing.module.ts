@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { FormDeactivateGuard } from '../auth/guards/form-deactivate.guard';
-import { NewTicketComponent } from '../tickets/new-ticket/new-ticket2.component';
-import { TicketListComponent } from '../tickets/ticket-list/ticket-list.component';
+import { NewTicketComponent } from '../tickets/new-ticket/new-ticket.component';
+import { TicketListComponent } from '../tickets/ticket-list/ticket-list2.component';
 import { TicketComponent } from '../tickets/ticket/ticket.component';
 import { CustomerDetailsEditComponent } from './customer-details/customer-details-edit/customer-details-edit.component';
 import { CustomerPanelComponent } from './customer-panel/customer-panel.component';
