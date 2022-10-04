@@ -3,9 +3,9 @@
 <div class="confirm-box">
   <p class="text-center text-large">{{ question }}</p>
   <br />
-  <div class="confirm-box-actions mx-auto">
-
-    <button class="button  d-inline mr-2" (click)="onConfirm(true)">Confirm</button>
-    <button class="button  d-inline  bg-danger " (click)="onConfirm(false)">Cancel</button>
+  <div class="confirm-box-actions mx-auto row g-0">
+    <div class="col-md-6 mb-3"> <button class="button d-inline w-md-50-w-s-75" (click)="onConfirm(true)">Confirm</button></div>
+    <div class="col-md-6">  <button class="button d-inline bg-danger w-md-50-w-s-75" (click)="onConfirm(false)">Cancel</button></div>
+  
   </div>
 </div>

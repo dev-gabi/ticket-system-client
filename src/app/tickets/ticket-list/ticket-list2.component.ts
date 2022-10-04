@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { filter, map, switchMap, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
@@ -16,7 +17,7 @@ import { TicketService3 } from '../ticket.service3';
 })
 export class TicketListComponent extends DestroyPolicy implements OnInit
 {
-  constructor(private ticketService: TicketService3,
+  constructor(private ticketService: TicketService3, private router: Router,
     private authService: AuthService, private ticketsQuery: TicketsQuery, private cdr: ChangeDetectorRef)
   { super(); }
 
@@ -73,4 +74,5 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
   {
     this.ticketService.clearError();
   }
+
 }

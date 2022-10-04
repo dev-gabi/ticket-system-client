@@ -1,11 +1,14 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { environment } from '../../../../environments/environment';
+import { AuthService } from '../../../auth/auth.service';
 import { CanFormDeactivate } from '../../../auth/guards/form-deactivate.guard';
 import { DestroyPolicy } from '../../../utils/destroy-policy';
 import { Ticket } from '../../models/ticket.model';
+import { TicketsQuery } from '../../store/tickets-query';
 import { TicketService3 } from '../../ticket.service3';
 
 @Component({
@@ -15,25 +18,28 @@ import { TicketService3 } from '../../ticket.service3';
 })
 export class AddReplyComponent extends DestroyPolicy implements OnInit, CanFormDeactivate
 {
-
   constructor(
     private ticketService: TicketService3,
     private cdr: ChangeDetectorRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private query: TicketsQuery,
+    private authService: AuthService
     ) { super(); }
 
   form: FormGroup;
-  @Input() ticket: Ticket;
-  @Input() isCustomer: boolean;
+  ticket: Ticket;
+  isCustomer: boolean;
   confirmSubject = new Subject<boolean>();
   isSaved = false;
   isConfirmDialogOpen = false;
   open = environment.ticketStatus.open;
-
-
+  @Output() cancel = new EventEmitter<void>();
 
   ngOnInit(): void
-  {  
+  {
+    this.isCustomer = this.authService.getLoggedInUser().role === environment.roles.customer;
+    this.ticket = this.query.getActive() as Ticket;
     this.setForm();
   }
   setForm()
@@ -46,7 +52,7 @@ export class AddReplyComponent extends DestroyPolicy implements OnInit, CanFormD
   }
   onAddReply()
   {
-
+    this.isSaved = true;
     let isInnerReply;
     this.form.get('isInnerReply').value ? isInnerReply = true : isInnerReply = false;
     this.ticketService.addReply(this.ticket.id, this.form.get('message').value, isInnerReply, this.form.get('imageFile').value).pipe(

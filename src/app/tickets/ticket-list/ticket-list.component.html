@@ -16,12 +16,11 @@
             <app-category-filter></app-category-filter>
           </div>
           <div class="col-md-1 p-0">
-            <!--<app-status-filter (status)="onQueryByStatus($event)"></app-status-filter>-->
-            <app-status-filter ></app-status-filter>
+            <app-status-filter></app-status-filter>
           </div>
         </div>
         <ng-container *ngIf="pageOfTickets$ | async as pageOfTickets">
-          <div *ngFor="let ticket of pageOfTickets" class="border-bottom row">
+          <a *ngFor="let ticket of pageOfTickets" class="border-bottom row pointer"  routerLinkActive="active" routerLink="{{ticket.id}}">
             <div class="col-md-3 p-2 row">
               <span class="col-md-6">Ticket#: {{ ticket.id }}</span>
               <span *ngIf="!isCustomer" class="col-md-6">{{ticket.customerName}}</span>
@@ -29,13 +28,12 @@
             <div class="col-md-3">
               <span> {{ ticket.openDate | date :'dd/MM/yyyy-HH:mm'}}</span>
             </div>
-            <div class="col-md-3">
-              <a *ngIf="isCustomer" routerLinkActive="active" routerLink="/customers/tickets/{{ ticket.id }}" class="d-inline-block center-text"> {{ ticket.title }}</a>
-              <a *ngIf="!isCustomer" routerLinkActive="active" routerLink="/support/tickets/{{ ticket.id }}" class="d-inline-block center-text"> {{ ticket.title }}</a>
-            </div>
+          <div class="col-md-3">           
+            {{ ticket.title }}
+          </div>
             <span class="col-md-2 text-center">{{ticket.category}}</span>
             <span [statusColor]="ticket.status" class="col-md-1 text-center">{{ticket.status}}</span>
-          </div>
+          </a>
         </ng-container>
         <div class="card-footer pb-0 pt-3">
           <jw-pagination [items$]="tickets$" (changePage)="onChangePage($event)" [pageSize]="10"></jw-pagination>
@@ -54,7 +52,6 @@
           <app-category-filter></app-category-filter>
         </div>
         <div class="col-md-12 mobile-only">
-          <!--<app-status-filter (status)="onQueryByStatus($event)"></app-status-filter>-->
           <app-status-filter></app-status-filter>
         </div>
       </div>

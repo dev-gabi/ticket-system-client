@@ -9,10 +9,6 @@ import { ErrorLogComponent } from './logs/error-log/error-log.component';
 import { SupporterSearchComponent } from './supporter-search/supporter-search';
 
 
-
-
-
-
 @NgModule({
   declarations: [
     AdminComponent,
@@ -22,7 +18,6 @@ import { SupporterSearchComponent } from './supporter-search/supporter-search';
   ],
   imports: [
     SharedModule,
-  //  ReactiveFormsModule,
     RouterModule,
     AppChartsModule,
     AdminRoutingModule

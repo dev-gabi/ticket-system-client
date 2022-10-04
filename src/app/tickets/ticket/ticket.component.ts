@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Observable } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
@@ -17,29 +17,31 @@ import { TicketService3 } from '../ticket.service3';
 export class TicketComponent extends DestroyPolicy implements OnInit
 {
   constructor(private ticketService: TicketService3, private route: ActivatedRoute,
-    private authService: AuthService, private cdr: ChangeDetectorRef) { super(); }
+    private authService: AuthService) { super(); }
 
 
   ticket$: Observable<Ticket>;
   error$: Observable<string>;
   ticketId: number;
   open = environment.ticketStatus.open;
-  closed = environment.ticketStatus.closed;
   isCustomer: boolean;
   imageFile: File;
-
+  location: string;
   confirmCloseTicket = false;
+  displayAdd:boolean;
 
 
   ngOnInit(): void
   {
+    this.displayAdd = true;
     this.isCustomer = this.authService.getLoggedInUser().role === environment.roles.customer;
 
     this.ticket$ = this.route.params.pipe(    
       switchMap((params: Params) =>
       {
         this.ticketId = +params['id'];
-
+        this.displayAdd = true;
+        this.location = window.location.pathname;
         return this.ticketService.setActiveTicket(this.ticketId);
       }),
       takeUntil(this.destroy$)
@@ -56,9 +58,9 @@ export class TicketComponent extends DestroyPolicy implements OnInit
   onConfirm(isConfirmed: boolean)
   {
     if (isConfirmed) {
-      this.closeTicket();
-      this.confirmCloseTicket = false;
+      this.closeTicket();   
     }
+    this.confirmCloseTicket = false;
   }
   closeTicket()
   {
@@ -68,5 +70,4 @@ export class TicketComponent extends DestroyPolicy implements OnInit
 
     this.ticketService.filterByStatus(environment.ticketStatus.open);
   }
-
 }

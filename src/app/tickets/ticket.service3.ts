@@ -14,7 +14,6 @@ import { Ticket } from './models/ticket.model';
 import { TicketsQuery } from './store/tickets-query';
 import { TicketsStore } from './store/tickets-store';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -53,6 +52,7 @@ export class TicketService3 extends BaseService
   {
     this.ticketStore.clearTickets();
   }
+
   private getTicketsByUserId(status: string)
   {
     const payloadReq: GetTicketsByUser = { id: this.userId, status: status }
@@ -138,6 +138,7 @@ export class TicketService3 extends BaseService
       this.filteredTickets.next(this.ticketsQuery.getAll());
     }
   }
+
   addReply(id: number, replyText: string, isInnerReply: boolean, image: File = null): Observable<Ticket>
   {
     const formData = this.createReplyFormData(id, replyText, isInnerReply, image);
@@ -198,6 +199,7 @@ export class TicketService3 extends BaseService
         return this.ticketsQuery.selectEntity(ticketResponse.id);
       }))
   }
+
   private updateClosedTicketInFilteredTickets(id:number)
   {
     let filtered = this.filteredTickets.value;
@@ -205,6 +207,7 @@ export class TicketService3 extends BaseService
     filtered[index] = this.ticketsQuery.getActive() as Ticket;
     this.filteredTickets.next(filtered);
   }
+
   addNew(request: { title: string, message: string, category: string, image: File }): Observable<Ticket>
   {
     const formData = this.createNewTicketFormData(request.title, request.message, request.category, request.image);

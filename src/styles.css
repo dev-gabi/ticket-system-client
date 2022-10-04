@@ -104,8 +104,14 @@ input[type=text], .input {
       animation: space-letters 0.5s forwards;
     }
 .w-200{width:200px;}
+.w-md-50-w-s-75{
+    width:50%;
+}
 
 @media (max-width: 576px) {
+  .w-md-50-w-s-75 {
+    width: 75%;
+  }
   .mobile-only{display:inline-block;}
   .desktop-only{ display:none;}
   .c-component {

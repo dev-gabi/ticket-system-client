@@ -16,8 +16,9 @@ export class FormDeactivateGuard implements CanDeactivate<CanFormDeactivate>
         currentState: RouterStateSnapshot, nextState?: RouterStateSnapshot)
     : boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>
   {
-    if (component.isSaved || !component.form) { return true; }
-      if (!component.isSaved && component.form.dirty) {
+
+    if (component && (component.isSaved || !component.form)) { return true; }
+    if (component && (!component.isSaved && component.form.dirty)) {
 
         let subject = new Subject<boolean>();
         component.openConfirmDialog();

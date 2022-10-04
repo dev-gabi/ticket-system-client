@@ -28,7 +28,7 @@ export class AuthComponent
             this.router.navigate(['/admin']);
             break;
           case environment.roles.supporter:
-            this.router.navigate(['/support']);
+            this.router.navigate(['/support/tickets']);
             break;
           case environment.roles.customer:
             this.router.navigate(['/customers']);

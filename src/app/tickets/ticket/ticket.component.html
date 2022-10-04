@@ -1,7 +1,7 @@
 <div class="c-component text-center fade-in " *ngIf="ticket$ | async as ticket">
   <div>
       <span [statusColor]="ticket.status" class="text-start float-left">
-        ticket status: {{ticket.status}} <span *ngIf="ticket.status===closed">at {{ticket.closingDate  |date :'dd/MM/yyyy-HH:mm'}}</span>
+        ticket status: {{ticket.status}} <span *ngIf="ticket.status!=open">at {{ticket.closingDate  |date :'dd/MM/yyyy-HH:mm'}}</span>
       </span><br />
       <button *ngIf="ticket.status===open"
               (click)="confirmCloseTicket = true"
@@ -14,7 +14,10 @@
 
   <br />
   <app-ticket-reply *ngFor="let reply of ticket.replies" [ticketReply]="reply" [isCustomer]="isCustomer"></app-ticket-reply>
-  <app-add-reply [ticket]="ticket" [isCustomer]="isCustomer"></app-add-reply>
+  <ng-container *ngIf="ticket.status===open">
+    <a *ngIf="displayAdd" routerLink="{{location}}/add-reply" class="button mx-auto" (click)="displayAdd = false" >Add Reply</a>
+    <router-outlet></router-outlet>
+  </ng-container>
 
 </div>
 

@@ -5,15 +5,11 @@ import { SharedModule } from '../shared/shared.module';
 import { TicketsModule } from '../tickets/tickets.module';
 import { StatsComponent } from './stats/stats.component';
 import { SupportRoutingModule } from './support-routing.module';
-import { SupportComponent } from './support/support.component';
 import { SupporterDetailsComponent } from './supporter-details/supporter-details.component';
 import { SupporterEditComponent } from './supporter-details/supporter-edit/supporter-edit.component';
 
-
-
 @NgModule({
   declarations: [
-    SupportComponent,
     StatsComponent,
     SupporterDetailsComponent,
     SupporterEditComponent

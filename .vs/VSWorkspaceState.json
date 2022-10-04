@@ -1,16 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src",
-    "\\src\\app",
-    "\\src\\app\\shared",
-    "\\src\\app\\shared\\loading-spinner",
-    "\\src\\app\\shared\\search\\search-user",
-    "\\src\\app\\tickets",
-    "\\src\\app\\tickets\\ticket-list",
-    "\\src\\app\\tickets\\ticket-list\\status-filter",
-    "\\src\\app\\tickets\\ticket-list\\status-filter\\status-select"
+    "\\src\\app\\auth\\auth",
+    "\\src\\app\\shared\\layout\\top-nav",
+    "\\src\\app\\support\\stats",
+    "\\src\\app\\tickets\\ticket\\add-reply",
+    "\\src\\assets\\css"
   ],
-  "SelectedNode": "\\src\\app\\shared\\loading-spinner\\loading-spinner.component.html",
+  "SelectedNode": "\\src",
   "PreviewInSolutionExplorer": true
 }
