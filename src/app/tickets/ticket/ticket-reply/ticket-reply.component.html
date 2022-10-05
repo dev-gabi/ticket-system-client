@@ -4,7 +4,7 @@
     <br/>
     <span *ngIf="ticketReply.isInnerReply" class="text-danger"><b>Inner Documentation</b></span>
   </div>
-  <p class="border-bottom col-md-6 p-1 m-0 break w-95-percent">
+  <p class="border-bottom col-md-6 p-1 m-0">
     {{ticketReply.message}}
   </p>
   <div *ngIf="ticketReply.isImageAttached && ticketReply.image!=null" class="col-md-2">
