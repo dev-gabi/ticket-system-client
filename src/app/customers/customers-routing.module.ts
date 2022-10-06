@@ -14,13 +14,13 @@ const routes: Routes = [
     children: [
       {
         path: 'tickets', component: TicketListComponent, children: [
-         
+          { path: 'new', component: NewTicketComponent, pathMatch: 'full', canDeactivate: [FormDeactivateGuard] },
           {
             path: ':id', component: TicketComponent, children: [
               { path: 'add-reply', component: AddReplyComponent, canDeactivate: [FormDeactivateGuard] }
             ]
           },
-          { path: 'new', component: NewTicketComponent, pathMatch: 'full', canDeactivate: [FormDeactivateGuard] }
+         
         ]
       },
       { path: 'edit', component: CustomerDetailsEditComponent, canDeactivate: [FormDeactivateGuard] },

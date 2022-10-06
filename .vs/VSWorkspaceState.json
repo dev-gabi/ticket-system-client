@@ -1,12 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\src\\app\\auth\\auth",
-    "\\src\\app\\shared\\layout\\top-nav",
-    "\\src\\app\\support\\stats",
-    "\\src\\app\\tickets\\ticket\\add-reply",
-    "\\src\\assets\\css"
+    "\\src",
+    "\\src\\app",
+    "\\src\\app\\customers",
+    "\\src\\app\\customers\\customer-details\\customer-details-edit"
   ],
-  "SelectedNode": "\\src",
+  "SelectedNode": "\\src\\app\\customers\\customers-routing.module.ts",
   "PreviewInSolutionExplorer": true
 }
