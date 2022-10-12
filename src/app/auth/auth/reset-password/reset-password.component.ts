@@ -35,15 +35,15 @@ export class ResetPasswordComponent extends DestroyPolicy implements OnInit
         this.userId = params["id"];
         return this.authService.validateRegistrationToken(this.resetToken, params["email"])
       }),
-      finalize(() => { }),
       takeUntil(this.destroy$),
     ).subscribe(
       (isValid: boolean) =>
       {
         if (!isValid) {
           this.message = "Token was expired. \n contact your admin to get a new registation email.";
+          this.cdr.markForCheck();
         }
-        this.cdr.markForCheck();
+  
       }
     );
 
@@ -77,10 +77,11 @@ export class ResetPasswordComponent extends DestroyPolicy implements OnInit
   onConfirm()
   {
     if (this.isSuccess) {
-      this.router.navigate(['/auth/login']);
+     
     } else {
       this.message = null;
     }
+    this.router.navigate(['/auth/login']);
   }
 
   onCloseAlert()

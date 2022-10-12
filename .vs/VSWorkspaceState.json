@@ -3,9 +3,13 @@
     "",
     "\\src",
     "\\src\\app",
+    "\\src\\app\\auth",
+    "\\src\\app\\auth\\auth",
+    "\\src\\app\\auth\\auth\\register",
+    "\\src\\app\\auth\\auth\\register\\result",
     "\\src\\app\\customers",
-    "\\src\\app\\customers\\customer-details\\customer-details-edit"
+    "\\src\\app\\support\\stats"
   ],
-  "SelectedNode": "\\src\\app\\customers\\customers-routing.module.ts",
+  "SelectedNode": "\\src\\app\\auth\\auth\\register\\result\\register-result.component.ts",
   "PreviewInSolutionExplorer": true
 }

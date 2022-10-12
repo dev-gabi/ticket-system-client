@@ -19,9 +19,9 @@ export class RegisterResultComponent extends DestroyPolicy implements OnInit
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(
       params =>
       {
-        if (params["message"] != null) {
+        if (params["error"] != null) {
           this.isError = true;
-          this.errorMessage = params["message"];
+          this.errorMessage = params["error"];
           this.cdr.markForCheck();
         }      
       }

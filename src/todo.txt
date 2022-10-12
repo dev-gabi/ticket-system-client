@@ -1,5 +1,1 @@
-css:
-refetch tickets button overlaps hello user
 
-ticket-list comp is not 100% width - need to disappear horizontal scrolling
-mobile text streching out of view port
