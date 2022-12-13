@@ -16,6 +16,9 @@ export abstract class BaseService
     if (response.status == 0) {
       error = "A Network Error Has Occured, please notify the site's webmaster";
     }
+    else if(response.status === 400){
+      error = response.error?.errors;
+    }
     else if (response.error.errors) {
       if (response.error.errors.UserName) {
         response.error.errors.UserName.map((er: string) => error += " " + er );

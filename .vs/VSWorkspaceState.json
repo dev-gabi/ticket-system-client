@@ -3,13 +3,8 @@
     "",
     "\\src",
     "\\src\\app",
-    "\\src\\app\\auth",
-    "\\src\\app\\auth\\auth",
-    "\\src\\app\\auth\\auth\\register",
-    "\\src\\app\\auth\\auth\\register\\result",
-    "\\src\\app\\customers",
-    "\\src\\app\\support\\stats"
+    "\\src\\environments"
   ],
-  "SelectedNode": "\\src\\app\\auth\\auth\\register\\result\\register-result.component.ts",
+  "SelectedNode": "\\src\\app\\auth",
   "PreviewInSolutionExplorer": true
 }
