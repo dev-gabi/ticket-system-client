@@ -59,6 +59,7 @@ export class TicketListComponent extends DestroyPolicy implements OnInit
 
   reFetchTickets()
   {
+    //FIXME duplicate post request to get tickets if ticketsQuery.selectedIsClosedTicketsLoaded$ is true
     this.ticketService.clearTicketsStore();
     this.ticketService.filterByStatus(environment.ticketStatus.open);  
   }

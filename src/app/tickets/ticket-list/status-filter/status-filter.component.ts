@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
+import { DetectIsMobile } from 'src/app/shared/interface/detectIsMobile.interface';
+import { Helpers } from 'src/app/utils/helpers';
+
 
 
 @Component({
@@ -6,7 +9,20 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angul
   templateUrl: './status-filter.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StatusFilterComponent 
+export class StatusFilterComponent implements DetectIsMobile
 {
-  //TODO add isMobileDevice variable tp check device width and avoid loading app-status-select twice
+  isMobile:boolean;
+
+  ngOnInit(): void {
+    this.detectWindowWidth();
+  }
+
+  @HostListener('window:resize', ['$event'])
+    onResize() {
+      this.detectWindowWidth();
+    }
+
+  detectWindowWidth(){
+    this.isMobile = Helpers.detectWindowWidth();
+  }
 }

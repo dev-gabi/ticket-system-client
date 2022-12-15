@@ -1,21 +1,12 @@
 <div class="d-block mx-auto">
-  <div class="row w-100 mobile-only p-1 g-0">
-    <h3 class="center-text col-6 p-0 inline-flex">Filter by category: </h3>
-    <div *ngIf="categories$ | async as categories" class="col-5 inline-flex">
+  
+      <h3  *ngIf="isMobile" class="center-text col-6 p-0 inline-flex">Filter by category: </h3>
+      <div *ngIf="categories$ | async as categories" class="col-5 inline-flex">
 
-      <app-category-select [categories]="categories"></app-category-select>
+        <app-category-select [categories]="categories"></app-category-select>
+  
+      </div>
 
-    </div>
-  </div>
-
-  <ng-container *ngIf="categories$ | async as categories" >
-    <div class="desktop-only">
-
-      <app-category-select [categories]="categories"></app-category-select>
-
-    </div>
-
-  </ng-container>
 </div>
 
 

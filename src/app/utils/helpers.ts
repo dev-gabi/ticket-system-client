@@ -27,6 +27,9 @@ export class Helpers
     return users;
   }
 
+  public static detectWindowWidth() {
+    return window.innerWidth < 900;
+  }
 } 
 
 
